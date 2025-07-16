@@ -41804,7 +41804,7 @@ components:
             - type: integer
             - type: string
               enum:
-                - inf
+                - "inf"
               x-stainless-const: true
           description: |
             Maximum number of output tokens for a single assistant response,
@@ -41891,7 +41891,7 @@ components:
             - type: integer
             - type: string
               enum:
-                - inf
+                - "inf"
               x-stainless-const: true
           description: |
             Maximum number of output tokens for a single assistant response,
@@ -43903,7 +43903,7 @@ components:
             - type: integer
             - type: string
               enum:
-                - inf
+                - "inf"
               x-stainless-const: true
           description: |
             Maximum number of output tokens for a single assistant response,
@@ -44187,7 +44187,7 @@ components:
             - type: integer
             - type: string
               enum:
-                - inf
+                - "inf"
               x-stainless-const: true
           description: |
             Maximum number of output tokens for a single assistant response,
@@ -44407,7 +44407,7 @@ components:
             - type: integer
             - type: string
               enum:
-                - inf
+                - "inf"
               x-stainless-const: true
           description: |
             Maximum number of output tokens for a single assistant response,

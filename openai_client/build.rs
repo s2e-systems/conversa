@@ -482,7 +482,6 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
     writeln!(output_file, "#[serde(untagged)]").unwrap();
     writeln!(output_file, "pub enum {} {{", name).unwrap();
 
-    let mut string_created = false;
     for (index, one_of_variant) in one_of_list.iter().enumerate() {
         let one_of_variant_hash = one_of_variant.as_hash().unwrap();
         if let Some(doc) = one_of_variant_hash
@@ -510,9 +509,25 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
                     // Some variants have two String types to account for enumerations but for
                     // our type this is not necessary because all String representations are
                     // equal
-                    if !string_created {
+                    if let Some(Yaml::Array(enum_list)) =
+                        one_of_variant_hash.get(&Yaml::String("enum".to_string()))
+                    {
+                        for string_variant in enum_list {
+                            writeln!(
+                                output_file,
+                                "\t#[serde(rename=\"{}\")]",
+                                string_variant.as_str().unwrap()
+                            )
+                            .unwrap();
+                            writeln!(
+                                output_file,
+                                "\t{},",
+                                str_to_camel_case(string_variant.as_str().unwrap())
+                            )
+                            .unwrap();
+                        }
+                    } else {
                         writeln!(output_file, "\tString(String),").unwrap();
-                        string_created = true;
                     }
                 }
                 "integer" => {
@@ -1139,7 +1154,7 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
                         {
                             "String".to_string()
                         } else {
-                            todo!("{:?}", response_schema_hash)
+                            unimplemented!("{:?}", response_schema_hash)
                         }
                     } else {
                         str_to_camel_case(&format!("{operation_name}_response"))
@@ -1171,7 +1186,7 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
                     {
                         str_to_camel_case(&format!("{operation_name}_response"))
                     } else {
-                        todo!("{:?}", response_schema_hash)
+                        unimplemented!("{:?}", response_schema_hash)
                     }
                 } else {
                     str_to_camel_case(&format!("{operation_name}_response"))
