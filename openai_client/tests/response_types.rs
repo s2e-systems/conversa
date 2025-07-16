@@ -13,7 +13,7 @@ pub fn model_response_properties_with_default_serialize() {
         top_logprobs: None,
         temperature: None,
         top_p: None,
-        user: Some(format!("me")),
+        user: Some("me".to_string()),
         service_tier: None,
     };
     let expected: serde_json::Value = serde_json::from_str(
@@ -39,7 +39,7 @@ pub fn model_response_properties_serialize() {
         top_logprobs: Some(1),
         temperature: Some(0.5),
         top_p: Some(1.0),
-        user: Some(format!("me")),
+        user: Some("me".to_string()),
         service_tier: None,
     };
     let expected: serde_json::Value = serde_json::from_str(
@@ -70,7 +70,7 @@ pub fn create_model_response_properties_serialize() {
             top_logprobs: Some(1),
             temperature: Some(0.5),
             top_p: Some(1.0),
-            user: Some(format!("me")),
+            user: Some("me".to_string()),
             service_tier: None,
         },
         object: CreateModelResponsePropertiesObject {

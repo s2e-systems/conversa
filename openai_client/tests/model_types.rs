@@ -5,10 +5,10 @@ use conversa_openai_client::types::{
 #[test]
 pub fn model_json_serialize() {
     let model = Model {
-        id: format!("VAR_chat_model_id"),
+        id: "VAR_chat_model_id".to_string(),
         object: ModelObject::Model,
         created: 1686935002,
-        owned_by: format!("openai"),
+        owned_by: "openai".to_string(),
     };
     let expected: serde_json::Value = serde_json::from_str(
         r#"
@@ -33,16 +33,16 @@ pub fn list_model_response_json_serialize() {
         object: ListModelsResponseObject::List,
         data: vec![
             Model {
-                id: format!("VAR_chat_model_id"),
+                id: "VAR_chat_model_id".to_string(),
                 object: ModelObject::Model,
                 created: 1686935002,
                 owned_by: format!("openai"),
             },
             Model {
-                id: format!("chat_model"),
+                id: "chat_model".to_string(),
                 object: ModelObject::Model,
                 created: 1234567890,
-                owned_by: format!("s2e"),
+                owned_by: "s2e".to_string(),
             },
         ],
     };
@@ -78,8 +78,8 @@ pub fn list_model_response_json_serialize() {
 #[test]
 pub fn delete_model_response_json_serialize() {
     let delete_model_response = DeleteModelResponse {
-        id: format!("ft:gpt-4o-mini:acemeco:suffix:abc123"),
-        object: format!("model"),
+        id: "ft:gpt-4o-mini:acemeco:suffix:abc123".to_string(),
+        object: "model".to_string(),
         deleted: true,
     };
     let expected: serde_json::Value = serde_json::from_str(
