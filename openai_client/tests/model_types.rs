@@ -36,7 +36,7 @@ pub fn list_model_response_json_serialize() {
                 id: "VAR_chat_model_id".to_string(),
                 object: ModelObject::Model,
                 created: 1686935002,
-                owned_by: format!("openai"),
+                owned_by: "openai".to_string(),
             },
             Model {
                 id: "chat_model".to_string(),
