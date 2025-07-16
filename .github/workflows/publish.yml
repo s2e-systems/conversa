@@ -1,9 +1,9 @@
 name: Publish Crates
 
 on:
-  push:
-    tags:
-      - 'v*'  # Trigger only on version tags like v1.0.0
+  release:
+    types: published
+  workflow_dispatch:
 
 permissions:
   id-token: write  # Required for GitHub to authenticate with crates.io
