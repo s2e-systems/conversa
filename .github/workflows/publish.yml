@@ -1,0 +1,29 @@
+name: Publish Crates
+
+on:
+  push:
+    tags:
+      - 'v*'  # Trigger only on version tags like v1.0.0
+
+permissions:
+  id-token: write  # Required for GitHub to authenticate with crates.io
+  contents: read
+
+jobs:
+  publish:
+    name: Publish all crates in workspace
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: actions/setup-rust@v1
+        with:
+          rust-version: stable
+
+      - name: Publish Workspace
+        uses: crates-io/action@v1
+        with:
+          publish: true
