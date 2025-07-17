@@ -276,6 +276,10 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
                             .is_some()
                         {
                             generate_inner_object_name(name, &field_name)
+                        } else if property_hash.get(&Yaml::String("format".to_string()))
+                            == Some(&Yaml::String("binary".to_string()))
+                        {
+                            "Vec<u8>".to_string()
                         } else {
                             "String".to_string()
                         }

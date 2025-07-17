@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct AddUploadPartRequest {
 	/** The chunk of bytes for this Part. */
-	pub data: String,
+	pub data: Vec<u8>,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -3081,7 +3081,7 @@ pub struct CreateContainerFileBody {
 	pub file_id: Option<String>,
 	/** The File object (not file name) to be uploaded. */
 	#[serde(skip_serializing_if = "Option::is_none")]
-	pub file: Option<String>,
+	pub file: Option<Vec<u8>>,
 }
 
 /** Input text to embed, encoded as a string or array of tokens. To embed multiple inputs in a single request, pass an array of strings or array of token arrays. The input must not exceed the max input tokens for the model (8192 tokens for all embedding models), cannot be an empty string, and any array must be 2048 dimensions or less. [Example Python code](https://cookbook.openai.com/examples/how_to_count_tokens_with_tiktoken) for counting tokens. In addition to the per-input token limit, all embedding  models enforce a maximum of 300,000 tokens summed across all inputs in a  single request. */
@@ -3563,7 +3563,7 @@ pub enum CreateFileRequestPurpose {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateFileRequest {
 	/** The File object (not file name) to be uploaded. */
-	pub file: String,
+	pub file: Vec<u8>,
 	/** The intended purpose of the uploaded file. One of: - `assistants`: Used in the Assistants API - `batch`: Used in the Batch API - `fine-tune`: Used for fine-tuning - `vision`: Images used for vision fine-tuning - `user_data`: Flexible file type for any purpose - `evals`: Used for eval data sets */
 	pub purpose: CreateFileRequestPurpose,
 }
@@ -3788,7 +3788,7 @@ For `dall-e-2`, you can only provide one image, and it should be a square
 	pub prompt: String,
 	/** An additional image whose fully transparent areas (e.g. where alpha is zero) indicate where `image` should be edited. If there are multiple images provided, the mask will be applied on the first image. Must be a valid PNG file, less than 4MB, and have the same dimensions as `image`. */
 	#[serde(skip_serializing_if = "Option::is_none")]
-	pub mask: Option<String>,
+	pub mask: Option<Vec<u8>>,
 	/** Allows to set transparency for the background of the generated image(s). 
 This parameter is only supported for `gpt-image-1`. Must be one of 
 `transparent`, `opaque` or `auto` (default value). When `auto` is used, the 
@@ -4001,7 +4001,7 @@ pub enum CreateImageVariationRequestSize {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateImageVariationRequest {
 	/** The image to use as the basis for the variation(s). Must be a valid PNG file, less than 4MB, and square. */
-	pub image: String,
+	pub image: Vec<u8>,
 	/** The model to use for image generation. Only `dall-e-2` is supported at this time. */
 	#[serde(skip_serializing_if = "Option::is_none")]
 	pub model: Option<CreateImageVariationRequestModel>,
@@ -4613,7 +4613,7 @@ pub enum CreateTranscriptionRequestChunkingStrategy {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTranscriptionRequest {
 	/** The audio file object (not file name) to transcribe, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm. */
-	pub file: String,
+	pub file: Vec<u8>,
 	/** ID of the model to use. The options are `gpt-4o-transcribe`, `gpt-4o-mini-transcribe`, and `whisper-1` (which is powered by our open source Whisper V2 model). */
 	pub model: CreateTranscriptionRequestModel,
 	/** The language of the input audio. Supplying the input language in [ISO-639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) (e.g. `en`) format will improve accuracy and latency. */
@@ -4725,7 +4725,7 @@ pub enum CreateTranslationRequestResponseFormat {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateTranslationRequest {
 	/** The audio file object (not file name) translate, in one of these formats: flac, mp3, mp4, mpeg, mpga, m4a, ogg, wav, or webm. */
-	pub file: String,
+	pub file: Vec<u8>,
 	/** ID of the model to use. Only `whisper-1` (which is powered by our open source Whisper V2 model) is currently available. */
 	pub model: CreateTranslationRequestModel,
 	/** An optional text to guide the model's style or continue a previous audio segment. The [prompt](/docs/guides/speech-to-text#prompting) should be in English. */
