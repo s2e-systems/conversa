@@ -451,7 +451,7 @@ with the `store` parameter set to `true` will be returned. */
 		Ok(serde_json::from_slice(&response_bytes)?)
 	}
 
-	/** **Starting a new project?** We recommend trying [Responses](/docs/api-reference/responses) 
+	/** **Starting a new project?** We recommend trying [Responses](/docs/api-reference/responses)
 to take advantage of the latest OpenAI platform features. Compare
 [Chat Completions with Responses](/docs/guides/responses-vs-chat-completions?api-mode=responses).
 
@@ -463,8 +463,8 @@ and [audio](/docs/guides/audio) guides.
 
 Parameter support can differ depending on the model used to generate the
 response, particularly for newer reasoning models. Parameters that are only
-supported for reasoning models are noted below. For the current state of 
-unsupported parameters in reasoning models, 
+supported for reasoning models are noted below. For the current state of
+unsupported parameters in reasoning models,
 [refer to the reasoning guide](/docs/guides/reasoning). */
 	pub async fn create_chat_completion(&self, request_body: crate::types::CreateChatCompletionRequest, ) -> ConversaResult<CreateChatCompletionResponse> {
 		let address = format!("{}/chat/completions", self.base_address);
@@ -1183,12 +1183,17 @@ The Fine-tuning API only supports `.jsonl` files. The input also has certain req
 The Batch API only supports `.jsonl` files up to 200 MB in size. The input also has a specific required [format](/docs/api-reference/batch/request-input).
 
 Please [contact us](https://help.openai.com/) if you need to increase these storage limits. */
-	pub async fn create_file(&self, request_body: crate::types::CreateFileRequest, ) -> ConversaResult<crate::types::OpenAIFile> {
+	pub async fn create_file(&self, request_body: crate::types::CreateFileRequest, file_name: String) -> ConversaResult<crate::types::OpenAIFile> {
 		let address = format!("{}/files", self.base_address);
-		let mut request = self.client.post(&address);
-		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
-		let result = request.send().await?;
+		let file_part = reqwest::multipart::Part::text(request_body.file)
+			.mime_str("application/octet-stream").unwrap()
+			.file_name(file_name);
+		let form = reqwest::multipart::Form::new()
+			.text("purpose", serde_json::to_string(&request_body.purpose)?.replace(r#"""#,""))
+			.part("file", file_part);
+
+		let result = self.client.post(&address).bearer_auth(&self.api_key).multipart(form).send().await?;
+
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
 		let response_bytes = result.bytes().await?;
@@ -2426,7 +2431,7 @@ You can atomically and idempotently activate up to 10 certificates at a time. */
 		Ok(serde_json::from_slice(&response_bytes)?)
 	}
 
-	/** Deactivate certificates at the project level. You can atomically and 
+	/** Deactivate certificates at the project level. You can atomically and
 idempotently deactivate up to 10 certificates at a time. */
 	pub async fn deactivate_project_certificates(&self, project_id: &str, request_body: crate::types::ToggleCertificatesRequest, ) -> ConversaResult<crate::types::ListCertificatesResponse> {
 		let address = format!("{}/organization/projects/{project_id}/certificates/deactivate", self.base_address);
@@ -3211,7 +3216,7 @@ for the Realtime API. */
 	}
 
 	/** Create an ephemeral API token for use in client-side applications with the
-Realtime API specifically for realtime transcriptions. 
+Realtime API specifically for realtime transcriptions.
 Can be configured with the same session parameters as the `transcription_session.update` client event.
 
 It responds with a session object, plus a `client_secret` key which contains
@@ -3322,7 +3327,7 @@ as input for the model's response. */
 	}
 
 	/** Cancels a model response with the given ID. Only responses created with
-the `background` parameter set to `true` can be cancelled. 
+the `background` parameter set to `true` can be cancelled.
 [Learn more](/docs/guides/background). */
 	pub async fn cancel_response(&self, response_id: &str, ) -> ConversaResult<crate::types::Response> {
 		let address = format!("{}/responses/{response_id}/cancel", self.base_address);
@@ -3826,8 +3831,8 @@ Once you complete the Upload, we will create a
 you uploaded. This File is usable in the rest of our platform as a regular
 File object.
 
-For certain `purpose` values, the correct `mime_type` must be specified. 
-Please refer to documentation for the 
+For certain `purpose` values, the correct `mime_type` must be specified.
+Please refer to documentation for the
 [supported MIME types for your use case](/docs/assistants/tools/file-search#supported-files).
 
 For guidance on the proper filename extensions for each purpose, please
@@ -3875,7 +3880,7 @@ File](/docs/api-reference/files/create). */
 		Ok(serde_json::from_slice(&response_bytes)?)
 	}
 
-	/** Completes the [Upload](/docs/api-reference/uploads/object). 
+	/** Completes the [Upload](/docs/api-reference/uploads/object).
 
 Within the returned Upload object, there is a nested [File](/docs/api-reference/files/object) object that is ready to use in the rest of the platform.
 
@@ -3903,7 +3908,7 @@ The number of bytes uploaded upon completion must match the number of bytes init
 		Ok(serde_json::from_slice(&response_bytes)?)
 	}
 
-	/** Adds a [Part](/docs/api-reference/uploads/part-object) to an [Upload](/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload. 
+	/** Adds a [Part](/docs/api-reference/uploads/part-object) to an [Upload](/docs/api-reference/uploads/object) object. A Part represents a chunk of bytes from the file you are trying to upload.
 
 Each Part can be at most 64 MB, and you can add Parts until you hit the Upload maximum of 8 GB.
 
