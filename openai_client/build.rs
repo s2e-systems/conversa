@@ -1253,18 +1253,30 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
             {
                 let request_body_is_required =
                     request_body_hash["required"].as_bool().unwrap_or(false);
-                if request_body_is_required {
-                    writeln!(
-                        client_output_file,
-                        "\t\trequest = request.body(serde_json::to_string(&request_body)?);",
-                    )
-                    .unwrap();
-                } else {
-                    writeln!(
+
+                let request_body_content = request_body_hash["content"].as_hash().unwrap();
+                debug_assert!(request_body_content.len() == 1);
+                // TODO: It requires different handling depending on the type of request body (application/json or multipart/form-data)
+                let request_body_content_type =
+                    request_body_content.front().unwrap().0.as_str().unwrap();
+                if request_body_content_type == "application/json" {
+                    if request_body_is_required {
+                        writeln!(
+                            client_output_file,
+                            "\t\trequest = request.body(serde_json::to_string(&request_body)?);",
+                        )
+                        .unwrap();
+                    } else {
+                        writeln!(
                         client_output_file,
                         "\t\tif let Some(b) = request_body {{\n\t\t\trequest = request.body(serde_json::to_string(&b)?);\n\t\t}}",
                     )
                     .unwrap();
+                    }
+                } else if request_body_content_type == "multipart/form-data" {
+                    writeln!(client_output_file, "\t\ttodo!();").unwrap();
+                } else {
+                    unimplemented!("Request body type: {}", request_body_content_type);
                 }
             }
 

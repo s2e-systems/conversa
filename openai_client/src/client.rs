@@ -280,7 +280,7 @@ impl OpenAIClient {
 		let address = format!("{}/audio/transcriptions", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		todo!();
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -306,7 +306,7 @@ impl OpenAIClient {
 		let address = format!("{}/audio/translations", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		todo!();
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -716,7 +716,7 @@ You can send either a multipart/form-data request with the raw file content, or 
 		let address = format!("{}/containers/{container_id}/files", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		todo!();
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1187,7 +1187,7 @@ Please [contact us](https://help.openai.com/) if you need to increase these stor
 		let address = format!("{}/files", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		todo!();
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1594,7 +1594,7 @@ Response includes details of the enqueued job including job status and the name 
 		let address = format!("{}/images/edits", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		todo!();
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1638,7 +1638,7 @@ Response includes details of the enqueued job including job status and the name 
 		let address = format!("{}/images/variations", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		todo!();
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3912,7 +3912,7 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let address = format!("{}/uploads/{upload_id}/parts", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		todo!();
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
