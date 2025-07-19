@@ -276,6 +276,10 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
                             .is_some()
                         {
                             generate_inner_object_name(name, &field_name)
+                        } else if property_hash.get(&Yaml::String("format".to_string()))
+                            == Some(&Yaml::String("binary".to_string()))
+                        {
+                            "Vec<u8>".to_string()
                         } else {
                             "String".to_string()
                         }
@@ -482,7 +486,6 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
     writeln!(output_file, "#[serde(untagged)]").unwrap();
     writeln!(output_file, "pub enum {} {{", name).unwrap();
 
-    let mut string_created = false;
     for (index, one_of_variant) in one_of_list.iter().enumerate() {
         let one_of_variant_hash = one_of_variant.as_hash().unwrap();
         if let Some(doc) = one_of_variant_hash
@@ -510,9 +513,25 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
                     // Some variants have two String types to account for enumerations but for
                     // our type this is not necessary because all String representations are
                     // equal
-                    if !string_created {
+                    if let Some(Yaml::Array(enum_list)) =
+                        one_of_variant_hash.get(&Yaml::String("enum".to_string()))
+                    {
+                        for string_variant in enum_list {
+                            writeln!(
+                                output_file,
+                                "\t#[serde(rename=\"{}\")]",
+                                string_variant.as_str().unwrap()
+                            )
+                            .unwrap();
+                            writeln!(
+                                output_file,
+                                "\t{},",
+                                str_to_camel_case(string_variant.as_str().unwrap())
+                            )
+                            .unwrap();
+                        }
+                    } else {
                         writeln!(output_file, "\tString(String),").unwrap();
-                        string_created = true;
                     }
                 }
                 "integer" => {
@@ -1139,7 +1158,7 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
                         {
                             "String".to_string()
                         } else {
-                            todo!("{:?}", response_schema_hash)
+                            unimplemented!("{:?}", response_schema_hash)
                         }
                     } else {
                         str_to_camel_case(&format!("{operation_name}_response"))
@@ -1171,7 +1190,7 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
                     {
                         str_to_camel_case(&format!("{operation_name}_response"))
                     } else {
-                        todo!("{:?}", response_schema_hash)
+                        unimplemented!("{:?}", response_schema_hash)
                     }
                 } else {
                     str_to_camel_case(&format!("{operation_name}_response"))
@@ -1234,18 +1253,30 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
             {
                 let request_body_is_required =
                     request_body_hash["required"].as_bool().unwrap_or(false);
-                if request_body_is_required {
-                    writeln!(
-                        client_output_file,
-                        "\t\trequest = request.body(serde_json::to_string(&request_body)?);",
-                    )
-                    .unwrap();
-                } else {
-                    writeln!(
+
+                let request_body_content = request_body_hash["content"].as_hash().unwrap();
+                debug_assert!(request_body_content.len() == 1);
+                // TODO: It requires different handling depending on the type of request body (application/json or multipart/form-data)
+                let request_body_content_type =
+                    request_body_content.front().unwrap().0.as_str().unwrap();
+                if request_body_content_type == "application/json" {
+                    if request_body_is_required {
+                        writeln!(
+                            client_output_file,
+                            "\t\trequest = request.body(serde_json::to_string(&request_body)?);",
+                        )
+                        .unwrap();
+                    } else {
+                        writeln!(
                         client_output_file,
                         "\t\tif let Some(b) = request_body {{\n\t\t\trequest = request.body(serde_json::to_string(&b)?);\n\t\t}}",
                     )
                     .unwrap();
+                    }
+                } else if request_body_content_type == "multipart/form-data" {
+                    writeln!(client_output_file, "\t\ttodo!();").unwrap();
+                } else {
+                    unimplemented!("Request body type: {}", request_body_content_type);
                 }
             }
 
