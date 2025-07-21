@@ -2,7 +2,7 @@
 #![allow(clippy::large_enum_variant)]
 
 pub mod client;
-mod multipart;
+pub mod multipart;
 pub mod types;
 
 use std::string::FromUtf8Error;
