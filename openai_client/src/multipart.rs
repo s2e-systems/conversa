@@ -5,8 +5,8 @@ use crate::ConversaError;
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct File {
     #[serde(skip)]
-    file_name: String,
-    file_data: Vec<u8>,
+    pub file_name: String,
+    pub file_data: Vec<u8>,
 }
 
 impl TryFrom<&std::path::Path> for File {
