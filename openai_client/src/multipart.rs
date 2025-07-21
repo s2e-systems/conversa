@@ -37,19 +37,50 @@ impl TryFrom<&std::path::Path> for File {
 
 impl crate::types::CreateTranscriptionRequest {
     pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
-        todo!()
+        let file_part = reqwest::multipart::Part::bytes(self.file.file_data.clone())
+            .mime_str("application/octet-stream")
+            .unwrap()
+            .file_name(self.file.file_name.clone());
+        reqwest::multipart::Form::new()
+            .text(
+                "model",
+                serde_json::to_string(&self.model)
+                    .unwrap()
+                    .replace(r#"""#, ""),
+            )
+            .part("file", file_part)
     }
 }
 
 impl crate::types::CreateTranslationRequest {
     pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
-        todo!()
+        let file_part = reqwest::multipart::Part::bytes(self.file.file_data.clone())
+            .mime_str("application/octet-stream")
+            .unwrap()
+            .file_name(self.file.file_name.clone());
+        reqwest::multipart::Form::new()
+            .text(
+                "model",
+                serde_json::to_string(&self.model)
+                    .unwrap()
+                    .replace(r#"""#, ""),
+            )
+            .part("file", file_part)
     }
 }
 
 impl crate::types::CreateContainerFileBody {
     pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
-        todo!()
+        let form = reqwest::multipart::Form::new();
+        if let Some(file) = &self.file {
+            let file_part = reqwest::multipart::Part::bytes(file.file_data.clone())
+                .mime_str("application/octet-stream")
+                .unwrap()
+                .file_name(file.file_name.clone());
+            form.part("file", file_part)
+        } else {
+            form
+        }
     }
 }
 
