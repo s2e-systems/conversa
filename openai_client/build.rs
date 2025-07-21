@@ -1234,14 +1234,16 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
                         if parameter_required {
                             writeln!(
                                 client_output_file,
-                                "\t\trequest = request.query(&{});",
+                                "\t\trequest = request.query(&[(\"{}\",{})]);",
+                                parameter["name"].as_str().unwrap().replace("[]", ""),
                                 parameter["name"].as_str().unwrap().replace("[]", "")
                             )
                             .unwrap();
                         } else {
                             writeln!(
                                 client_output_file,
-                                "\t\tif let Some(q) = {} {{\n\t\t\trequest = request.query(&q);\n\t\t}}",
+                                "\t\tif let Some(q) = {} {{\n\t\t\trequest = request.query(&[(\"{}\", q)]);\n\t\t}}",
+                                parameter["name"].as_str().unwrap().replace("[]", ""),
                                 parameter["name"].as_str().unwrap().replace("[]", "")
                             )
                             .unwrap();

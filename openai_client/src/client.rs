@@ -136,16 +136,16 @@ impl OpenAIClient {
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -351,10 +351,10 @@ impl OpenAIClient {
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -421,19 +421,19 @@ with the `store` parameter set to `true` will be returned. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = model {
-			request = request.query(&q);
+			request = request.query(&[("model", q)]);
 		}
 		if let Some(q) = metadata {
-			request = request.query(&q);
+			request = request.query(&[("metadata", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -567,13 +567,13 @@ returned. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -619,13 +619,13 @@ returned. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -739,13 +739,13 @@ You can send either a multipart/form-data request with the raw file content, or 
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -854,16 +854,16 @@ You can send either a multipart/form-data request with the raw file content, or 
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = order_by {
-			request = request.query(&q);
+			request = request.query(&[("order_by", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -975,16 +975,16 @@ For more information, see the [Evals guide](/docs/guides/evals). */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = status {
-			request = request.query(&q);
+			request = request.query(&[("status", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1093,16 +1093,16 @@ For more information, see the [Evals guide](/docs/guides/evals). */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = status {
-			request = request.query(&q);
+			request = request.query(&[("status", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1147,16 +1147,16 @@ For more information, see the [Evals guide](/docs/guides/evals). */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = purpose {
-			request = request.query(&q);
+			request = request.query(&[("purpose", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1319,16 +1319,16 @@ Organization owners can use this endpoint to view all permissions for a fine-tun
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = project_id {
-			request = request.query(&q);
+			request = request.query(&[("project_id", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1425,13 +1425,13 @@ Response includes details of the enqueued job including job status and the name 
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = metadata {
-			request = request.query(&q);
+			request = request.query(&[("metadata", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1499,10 +1499,10 @@ Response includes details of the enqueued job including job status and the name 
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1526,10 +1526,10 @@ Response includes details of the enqueued job including job status and the name 
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1747,13 +1747,13 @@ more in the [moderation guide](/docs/guides/moderation). */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1841,31 +1841,31 @@ more in the [moderation guide](/docs/guides/moderation). */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = effective_at {
-			request = request.query(&q);
+			request = request.query(&[("effective_at", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = event_types {
-			request = request.query(&q);
+			request = request.query(&[("event_types", q)]);
 		}
 		if let Some(q) = actor_ids {
-			request = request.query(&q);
+			request = request.query(&[("actor_ids", q)]);
 		}
 		if let Some(q) = actor_emails {
-			request = request.query(&q);
+			request = request.query(&[("actor_emails", q)]);
 		}
 		if let Some(q) = resource_ids {
-			request = request.query(&q);
+			request = request.query(&[("resource_ids", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1889,13 +1889,13 @@ more in the [moderation guide](/docs/guides/moderation). */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -1993,7 +1993,7 @@ You can get a certificate regardless of whether it is active or not. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = include {
-			request = request.query(&q);
+			request = request.query(&[("include", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2061,24 +2061,24 @@ The certificate must be inactive for the organization and all projects. */
 		let address = format!("{}/organization/costs", self.base_address);
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.query(&start_time);
+		request = request.query(&[("start_time",start_time)]);
 		if let Some(q) = end_time {
-			request = request.query(&q);
+			request = request.query(&[("end_time", q)]);
 		}
 		if let Some(q) = bucket_width {
-			request = request.query(&q);
+			request = request.query(&[("bucket_width", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = group_by {
-			request = request.query(&q);
+			request = request.query(&[("group_by", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = page {
-			request = request.query(&q);
+			request = request.query(&[("page", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2102,10 +2102,10 @@ The certificate must be inactive for the organization and all projects. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2193,13 +2193,13 @@ The certificate must be inactive for the organization and all projects. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = include_archived {
-			request = request.query(&q);
+			request = request.query(&[("include_archived", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2288,10 +2288,10 @@ The certificate must be inactive for the organization and all projects. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2378,13 +2378,13 @@ The certificate must be inactive for the organization and all projects. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2455,13 +2455,13 @@ idempotently deactivate up to 10 certificates at a time. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2507,10 +2507,10 @@ idempotently deactivate up to 10 certificates at a time. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2598,10 +2598,10 @@ idempotently deactivate up to 10 certificates at a time. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2710,33 +2710,33 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/usage/audio_speeches", self.base_address);
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.query(&start_time);
+		request = request.query(&[("start_time",start_time)]);
 		if let Some(q) = end_time {
-			request = request.query(&q);
+			request = request.query(&[("end_time", q)]);
 		}
 		if let Some(q) = bucket_width {
-			request = request.query(&q);
+			request = request.query(&[("bucket_width", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = user_ids {
-			request = request.query(&q);
+			request = request.query(&[("user_ids", q)]);
 		}
 		if let Some(q) = api_key_ids {
-			request = request.query(&q);
+			request = request.query(&[("api_key_ids", q)]);
 		}
 		if let Some(q) = models {
-			request = request.query(&q);
+			request = request.query(&[("models", q)]);
 		}
 		if let Some(q) = group_by {
-			request = request.query(&q);
+			request = request.query(&[("group_by", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = page {
-			request = request.query(&q);
+			request = request.query(&[("page", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2759,33 +2759,33 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/usage/audio_transcriptions", self.base_address);
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.query(&start_time);
+		request = request.query(&[("start_time",start_time)]);
 		if let Some(q) = end_time {
-			request = request.query(&q);
+			request = request.query(&[("end_time", q)]);
 		}
 		if let Some(q) = bucket_width {
-			request = request.query(&q);
+			request = request.query(&[("bucket_width", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = user_ids {
-			request = request.query(&q);
+			request = request.query(&[("user_ids", q)]);
 		}
 		if let Some(q) = api_key_ids {
-			request = request.query(&q);
+			request = request.query(&[("api_key_ids", q)]);
 		}
 		if let Some(q) = models {
-			request = request.query(&q);
+			request = request.query(&[("models", q)]);
 		}
 		if let Some(q) = group_by {
-			request = request.query(&q);
+			request = request.query(&[("group_by", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = page {
-			request = request.query(&q);
+			request = request.query(&[("page", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2808,24 +2808,24 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/usage/code_interpreter_sessions", self.base_address);
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.query(&start_time);
+		request = request.query(&[("start_time",start_time)]);
 		if let Some(q) = end_time {
-			request = request.query(&q);
+			request = request.query(&[("end_time", q)]);
 		}
 		if let Some(q) = bucket_width {
-			request = request.query(&q);
+			request = request.query(&[("bucket_width", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = group_by {
-			request = request.query(&q);
+			request = request.query(&[("group_by", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = page {
-			request = request.query(&q);
+			request = request.query(&[("page", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2848,36 +2848,36 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/usage/completions", self.base_address);
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.query(&start_time);
+		request = request.query(&[("start_time",start_time)]);
 		if let Some(q) = end_time {
-			request = request.query(&q);
+			request = request.query(&[("end_time", q)]);
 		}
 		if let Some(q) = bucket_width {
-			request = request.query(&q);
+			request = request.query(&[("bucket_width", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = user_ids {
-			request = request.query(&q);
+			request = request.query(&[("user_ids", q)]);
 		}
 		if let Some(q) = api_key_ids {
-			request = request.query(&q);
+			request = request.query(&[("api_key_ids", q)]);
 		}
 		if let Some(q) = models {
-			request = request.query(&q);
+			request = request.query(&[("models", q)]);
 		}
 		if let Some(q) = batch {
-			request = request.query(&q);
+			request = request.query(&[("batch", q)]);
 		}
 		if let Some(q) = group_by {
-			request = request.query(&q);
+			request = request.query(&[("group_by", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = page {
-			request = request.query(&q);
+			request = request.query(&[("page", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2900,33 +2900,33 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/usage/embeddings", self.base_address);
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.query(&start_time);
+		request = request.query(&[("start_time",start_time)]);
 		if let Some(q) = end_time {
-			request = request.query(&q);
+			request = request.query(&[("end_time", q)]);
 		}
 		if let Some(q) = bucket_width {
-			request = request.query(&q);
+			request = request.query(&[("bucket_width", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = user_ids {
-			request = request.query(&q);
+			request = request.query(&[("user_ids", q)]);
 		}
 		if let Some(q) = api_key_ids {
-			request = request.query(&q);
+			request = request.query(&[("api_key_ids", q)]);
 		}
 		if let Some(q) = models {
-			request = request.query(&q);
+			request = request.query(&[("models", q)]);
 		}
 		if let Some(q) = group_by {
-			request = request.query(&q);
+			request = request.query(&[("group_by", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = page {
-			request = request.query(&q);
+			request = request.query(&[("page", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -2949,39 +2949,39 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/usage/images", self.base_address);
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.query(&start_time);
+		request = request.query(&[("start_time",start_time)]);
 		if let Some(q) = end_time {
-			request = request.query(&q);
+			request = request.query(&[("end_time", q)]);
 		}
 		if let Some(q) = bucket_width {
-			request = request.query(&q);
+			request = request.query(&[("bucket_width", q)]);
 		}
 		if let Some(q) = sources {
-			request = request.query(&q);
+			request = request.query(&[("sources", q)]);
 		}
 		if let Some(q) = sizes {
-			request = request.query(&q);
+			request = request.query(&[("sizes", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = user_ids {
-			request = request.query(&q);
+			request = request.query(&[("user_ids", q)]);
 		}
 		if let Some(q) = api_key_ids {
-			request = request.query(&q);
+			request = request.query(&[("api_key_ids", q)]);
 		}
 		if let Some(q) = models {
-			request = request.query(&q);
+			request = request.query(&[("models", q)]);
 		}
 		if let Some(q) = group_by {
-			request = request.query(&q);
+			request = request.query(&[("group_by", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = page {
-			request = request.query(&q);
+			request = request.query(&[("page", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3004,33 +3004,33 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/usage/moderations", self.base_address);
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.query(&start_time);
+		request = request.query(&[("start_time",start_time)]);
 		if let Some(q) = end_time {
-			request = request.query(&q);
+			request = request.query(&[("end_time", q)]);
 		}
 		if let Some(q) = bucket_width {
-			request = request.query(&q);
+			request = request.query(&[("bucket_width", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = user_ids {
-			request = request.query(&q);
+			request = request.query(&[("user_ids", q)]);
 		}
 		if let Some(q) = api_key_ids {
-			request = request.query(&q);
+			request = request.query(&[("api_key_ids", q)]);
 		}
 		if let Some(q) = models {
-			request = request.query(&q);
+			request = request.query(&[("models", q)]);
 		}
 		if let Some(q) = group_by {
-			request = request.query(&q);
+			request = request.query(&[("group_by", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = page {
-			request = request.query(&q);
+			request = request.query(&[("page", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3053,24 +3053,24 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/usage/vector_stores", self.base_address);
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.query(&start_time);
+		request = request.query(&[("start_time",start_time)]);
 		if let Some(q) = end_time {
-			request = request.query(&q);
+			request = request.query(&[("end_time", q)]);
 		}
 		if let Some(q) = bucket_width {
-			request = request.query(&q);
+			request = request.query(&[("bucket_width", q)]);
 		}
 		if let Some(q) = project_ids {
-			request = request.query(&q);
+			request = request.query(&[("project_ids", q)]);
 		}
 		if let Some(q) = group_by {
-			request = request.query(&q);
+			request = request.query(&[("group_by", q)]);
 		}
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = page {
-			request = request.query(&q);
+			request = request.query(&[("page", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3094,13 +3094,13 @@ idempotently deactivate up to 10 certificates at a time. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = emails {
-			request = request.query(&q);
+			request = request.query(&[("emails", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3276,13 +3276,13 @@ as input for the model's response. */
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = include {
-			request = request.query(&q);
+			request = request.query(&[("include", q)]);
 		}
 		if let Some(q) = stream {
-			request = request.query(&q);
+			request = request.query(&[("stream", q)]);
 		}
 		if let Some(q) = starting_after {
-			request = request.query(&q);
+			request = request.query(&[("starting_after", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3350,19 +3350,19 @@ the `background` parameter set to `true` can be cancelled.
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		if let Some(q) = include {
-			request = request.query(&q);
+			request = request.query(&[("include", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3496,19 +3496,19 @@ the `background` parameter set to `true` can be cancelled.
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		if let Some(q) = run_id {
-			request = request.query(&q);
+			request = request.query(&[("run_id", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3618,16 +3618,16 @@ the `background` parameter set to `true` can be cancelled.
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3651,7 +3651,7 @@ the `background` parameter set to `true` can be cancelled.
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = include {
-			request = request.query(&q);
+			request = request.query(&[("include", q)]);
 		}
 		request = request.body(serde_json::to_string(&request_body)?);
 		let result = request.send().await?;
@@ -3740,19 +3740,19 @@ the `background` parameter set to `true` can be cancelled.
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		if let Some(q) = include {
-			request = request.query(&q);
+			request = request.query(&[("include", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3776,7 +3776,7 @@ the `background` parameter set to `true` can be cancelled.
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = include {
-			request = request.query(&q);
+			request = request.query(&[("include", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -3935,16 +3935,16 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -4118,19 +4118,19 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		if let Some(q) = filter {
-			request = request.query(&q);
+			request = request.query(&[("filter", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
@@ -4154,19 +4154,19 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let mut request = self.client.get(&address);
 		request = request.bearer_auth(&self.api_key);
 		if let Some(q) = limit {
-			request = request.query(&q);
+			request = request.query(&[("limit", q)]);
 		}
 		if let Some(q) = order {
-			request = request.query(&q);
+			request = request.query(&[("order", q)]);
 		}
 		if let Some(q) = after {
-			request = request.query(&q);
+			request = request.query(&[("after", q)]);
 		}
 		if let Some(q) = before {
-			request = request.query(&q);
+			request = request.query(&[("before", q)]);
 		}
 		if let Some(q) = filter {
-			request = request.query(&q);
+			request = request.query(&[("filter", q)]);
 		}
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
