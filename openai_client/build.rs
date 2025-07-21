@@ -1379,11 +1379,20 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
 
             if let Some(response_content_hash) = ok_response["content"].as_hash() {
                 if response_content_hash.len() == 1 {
-                    writeln!(
-                        client_output_file,
-                        "\t\tOk(serde_json::from_slice(&response_bytes)?)"
-                    )
-                    .unwrap();
+                    // This is a special case 
+                    if result_type == "String" {
+                        writeln!(
+                            client_output_file,
+                            "\t\tOk(String::from_utf8(response_bytes.to_vec())?)"
+                        )
+                        .unwrap();
+                    } else {
+                        writeln!(
+                            client_output_file,
+                            "\t\tOk(serde_json::from_slice(&response_bytes)?)"
+                        )
+                        .unwrap();
+                    }
                 } else {
                     writeln!(client_output_file, "\t\tmatch _content_type.as_str() {{").unwrap();
                     for (response_name, _) in response_content_hash {

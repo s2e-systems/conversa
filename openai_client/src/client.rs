@@ -1264,7 +1264,7 @@ Please [contact us](https://help.openai.com/) if you need to increase these stor
 		if status_code != 200 {
 			return Err(ConversaError::UnexpectedStatusCode{code: status_code, response: String::from_utf8(response_bytes.to_vec())?})
 		}
-		Ok(serde_json::from_slice(&response_bytes)?)
+		Ok(String::from_utf8(response_bytes.to_vec())?)
 	}
 
 	/** Run a grader. */
