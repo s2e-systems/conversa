@@ -2,6 +2,7 @@
 #![allow(clippy::large_enum_variant)]
 
 pub mod client;
+mod multipart;
 pub mod types;
 
 use std::string::FromUtf8Error;
@@ -12,6 +13,7 @@ use reqwest::{Client, header::ToStrError};
 pub enum ConversaError {
     ClientError(String),
     InvalidData(String),
+    IoError(String),
     UnexpectedStatusCode { code: u16, response: String },
     UnexpectedContentType(String),
     ErrorResponse(crate::types::ErrorResponse),
@@ -39,6 +41,12 @@ impl From<ToStrError> for ConversaError {
 impl From<FromUtf8Error> for ConversaError {
     fn from(value: FromUtf8Error) -> Self {
         ConversaError::InvalidData(value.to_string())
+    }
+}
+
+impl From<std::io::Error> for ConversaError {
+    fn from(value: std::io::Error) -> Self {
+        ConversaError::IoError(value.to_string())
     }
 }
 

@@ -279,7 +279,11 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
                         } else if property_hash.get(&Yaml::String("format".to_string()))
                             == Some(&Yaml::String("binary".to_string()))
                         {
-                            "Vec<u8>".to_string()
+                            if field_name == "file" {
+                                "crate::multipart::File".to_string()
+                            } else {
+                                "Vec<u8>".to_string()
+                            }
                         } else {
                             "String".to_string()
                         }
@@ -1274,7 +1278,11 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
                     .unwrap();
                     }
                 } else if request_body_content_type == "multipart/form-data" {
-                    writeln!(client_output_file, "\t\ttodo!();").unwrap();
+                    writeln!(
+                        client_output_file,
+                        "\t\trequest = request.multipart(request_body.into_multipart_form());",
+                    )
+                    .unwrap();
                 } else {
                     unimplemented!("Request body type: {}", request_body_content_type);
                 }
