@@ -1079,18 +1079,22 @@ pub enum BatchRequestInputMethod {
 	POST,
 }
 
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+#[serde(untagged)]
+pub enum BatchRequestInputBody {
+	CreateResponse(CreateResponse),
+}
+
 /** The per-line object of the batch input file */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct BatchRequestInput {
 	/** A developer-provided per-request id that will be used to match outputs to inputs. Must be unique for each request in a batch. */
-	#[serde(skip_serializing_if = "Option::is_none")]
-	pub custom_id: Option<String>,
+	pub custom_id: String,
 	/** The HTTP method to be used for the request. Currently only `POST` is supported. */
-	#[serde(skip_serializing_if = "Option::is_none")]
-	pub method: Option<BatchRequestInputMethod>,
+	pub method: BatchRequestInputMethod,
 	/** The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`, `/v1/embeddings`, and `/v1/completions` are supported. */
-	#[serde(skip_serializing_if = "Option::is_none")]
-	pub url: Option<String>,
+	pub url: String,
+	pub body: BatchRequestInputBody,
 }
 
 	/** The JSON body of the response */

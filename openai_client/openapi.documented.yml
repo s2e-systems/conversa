@@ -28771,6 +28771,14 @@ components:
           description: >-
             The OpenAI API relative URL to be used for the request. Currently `/v1/chat/completions`,
             `/v1/embeddings`, and `/v1/completions` are supported.
+        body:
+          oneOf:
+            - $ref: '#/components/schemas/CreateResponse'
+      required:
+        - custom_id
+        - method
+        - url
+        - body
       x-oaiMeta:
         name: The request input object
         example: >
