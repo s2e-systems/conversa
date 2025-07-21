@@ -426,12 +426,7 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
         if let Some(type_label) = schema_map.get(&Yaml::String("x-oaiTypeLabel".to_string())) {
             let type_label_str = type_label.as_str().unwrap();
             match type_label_str {
-                "map" => writeln!(
-                    output_file,
-                    "pub struct {}(pub HashMap<String,String>);\n",
-                    name
-                )
-                .unwrap(),
+                "map" => writeln!(output_file, "pub struct {}(pub serde_json::Value);\n", name).unwrap(),
                 _ => unimplemented!("{} with type label {:?}", name, type_label),
             }
         } else {
@@ -1379,7 +1374,7 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
 
             if let Some(response_content_hash) = ok_response["content"].as_hash() {
                 if response_content_hash.len() == 1 {
-                    // This is a special case 
+                    // This is a special case
                     if result_type == "String" {
                         writeln!(
                             client_output_file,

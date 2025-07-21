@@ -1099,7 +1099,7 @@ pub struct BatchRequestInput {
 
 	/** The JSON body of the response */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct BatchRequestOutputResponseBody(pub HashMap<String,String>);
+pub struct BatchRequestOutputResponseBody(pub serde_json::Value);
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct BatchRequestOutputResponse {
@@ -2714,7 +2714,7 @@ The exact effect will vary per model, but values between -1 and 1 should
 decrease or increase likelihood of selection; values like -100 or 100
 should result in a ban or exclusive selection of the relevant token. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateChatCompletionRequestObjectLogitBias(pub HashMap<String,String>);
+pub struct CreateChatCompletionRequestObjectLogitBias(pub serde_json::Value);
 
 /** Configuration for a [Predicted Output](/docs/guides/predicted-outputs),
 which can greatly improve response times when large parts of the model
@@ -3082,7 +3082,7 @@ Accepts a JSON object that maps tokens (specified by their token ID in the GPT t
 
 As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|> token from being generated. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateCompletionRequestLogitBias(pub HashMap<String,String>);
+pub struct CreateCompletionRequestLogitBias(pub serde_json::Value);
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateCompletionRequest {
@@ -14651,7 +14651,7 @@ pub enum RunStepDeltaStepDetailsToolCallsFileSearchObjectType {
 
 	/** For now, this is always going to be an empty object. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RunStepDeltaStepDetailsToolCallsFileSearchObjectFileSearch(pub HashMap<String,String>);
+pub struct RunStepDeltaStepDetailsToolCallsFileSearchObjectFileSearch(pub serde_json::Value);
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct RunStepDeltaStepDetailsToolCallsFileSearchObject {
