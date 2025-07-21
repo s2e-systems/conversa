@@ -64,7 +64,7 @@ fn str_to_snake_case(s: &str) -> String {
     let mut snake = String::new();
 
     for (i, ch) in s.char_indices() {
-        if ch == '_' || ch == '.' || ch == '-' {
+        if ch == '_' || ch == '.' || ch == '-' || ch == '/' {
             snake.push('_');
         } else {
             if ch.is_uppercase() && i != 0 {
@@ -202,7 +202,7 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
                     {
                         parse_object_type(
                             &generate_inner_object_name(name, property_name),
-                            property_value,
+                            property_items,
                             output_file,
                         );
                     } else if items_hash.get(&Yaml::String("oneOf".to_string())).is_some() {
@@ -376,14 +376,36 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
             };
 
             if object_required_list.contains(property_name) && !is_nullable {
-                writeln!(output_file, "\tpub {}: {},", field_name, field_type).unwrap();
+                if field_name.contains(['-', '/']) {
+                    writeln!(output_file, "\t#[serde(rename = \"{}\")]", field_name).unwrap();
+                    writeln!(
+                        output_file,
+                        "\tpub {}: {},",
+                        str_to_snake_case(&field_name),
+                        field_type
+                    )
+                    .unwrap();
+                } else {
+                    writeln!(output_file, "\tpub {}: {},", field_name, field_type).unwrap();
+                }
             } else {
                 writeln!(
                     output_file,
                     "\t#[serde(skip_serializing_if = \"Option::is_none\")]"
                 )
                 .unwrap();
-                writeln!(output_file, "\tpub {}: Option<{}>,", field_name, field_type).unwrap();
+                if field_name.contains(['-', '/']) {
+                    writeln!(output_file, "\t#[serde(rename = \"{}\")]", field_name).unwrap();
+                    writeln!(
+                        output_file,
+                        "\tpub {}: Option<{}>,",
+                        str_to_snake_case(&field_name),
+                        field_type
+                    )
+                    .unwrap();
+                } else {
+                    writeln!(output_file, "\tpub {}: Option<{}>,", field_name, field_type).unwrap();
+                }
             }
         }
         writeln!(output_file, "}}\n").unwrap();
@@ -401,7 +423,20 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
             "#[derive(Debug, PartialEq, Serialize, Deserialize)]"
         )
         .unwrap();
-        writeln!(output_file, "pub struct {}(pub String);\n", name).unwrap();
+        if let Some(type_label) = schema_map.get(&Yaml::String("x-oaiTypeLabel".to_string())) {
+            let type_label_str = type_label.as_str().unwrap();
+            match type_label_str {
+                "map" => writeln!(
+                    output_file,
+                    "pub struct {}(pub HashMap<String,String>);\n",
+                    name
+                )
+                .unwrap(),
+                _ => unimplemented!("{} with type label {:?}", name, type_label),
+            }
+        } else {
+            writeln!(output_file, "pub struct {}(pub String);\n", name).unwrap();
+        }
     }
 }
 

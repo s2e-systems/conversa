@@ -710,7 +710,14 @@ pub struct AuditLogCertificateDeleted {
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct AuditLogCertificatesActivatedCertificates(pub String);
+pub struct AuditLogCertificatesActivatedCertificates {
+	/** The certificate ID. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub id: Option<String>,
+	/** The name of the certificate. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub name: Option<String>,
+}
 
 /** The details for events with this `type`. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -720,7 +727,14 @@ pub struct AuditLogCertificatesActivated {
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct AuditLogCertificatesDeactivatedCertificates(pub String);
+pub struct AuditLogCertificatesDeactivatedCertificates {
+	/** The certificate ID. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub id: Option<String>,
+	/** The name of the certificate. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub name: Option<String>,
+}
 
 /** The details for events with this `type`. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -950,7 +964,20 @@ pub enum BatchObject {
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct BatchErrorsData(pub String);
+pub struct BatchErrorsData {
+	/** An error code identifying the error type. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub code: Option<String>,
+	/** A human-readable message providing more details about the error. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub message: Option<String>,
+	/** The name of the parameter that caused the error, if applicable. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub param: Option<String>,
+	/** The line number of the input file where the error occurred, if applicable. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub line: Option<u64>,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct BatchErrors {
@@ -1068,7 +1095,7 @@ pub struct BatchRequestInput {
 
 	/** The JSON body of the response */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct BatchRequestOutputResponseBody(pub String);
+pub struct BatchRequestOutputResponseBody(pub HashMap<String,String>);
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct BatchRequestOutputResponse {
@@ -1690,10 +1717,34 @@ pub enum ChatCompletionRequestUserMessageContentPart {
 	ChatCompletionRequestMessageContentPartFile(ChatCompletionRequestMessageContentPartFile),
 }
 
-	/** Annotations for the message, when applicable, as when using the
-[web search tool](/docs/guides/tools-web-search?api-mode=chat). */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct ChatCompletionResponseMessageAnnotations(pub String);
+pub enum ChatCompletionResponseMessageAnnotationsType {
+	#[serde(rename="url_citation")]
+	UrlCitation,
+}
+
+/** A URL citation when using web search. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct ChatCompletionResponseMessageAnnotationsUrlCitation {
+	/** The index of the last character of the URL citation in the message. */
+	pub end_index: u64,
+	/** The index of the first character of the URL citation in the message. */
+	pub start_index: u64,
+	/** The URL of the web resource. */
+	pub url: String,
+	/** The title of the web resource. */
+	pub title: String,
+}
+
+/** A URL citation when using web search. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct ChatCompletionResponseMessageAnnotations {
+	#[serde(rename="type")]
+	/** The type of the URL citation. Always `url_citation`. */
+	pub r#type: ChatCompletionResponseMessageAnnotationsType,
+	/** A URL citation when using web search. */
+	pub url_citation: ChatCompletionResponseMessageAnnotationsUrlCitation,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum ChatCompletionResponseMessageRole {
@@ -1815,9 +1866,16 @@ pub struct ChatCompletionStreamResponseDelta {
 	pub refusal: Option<String>,
 }
 
-	/** List of the most likely tokens and their log probability, at this token position. In rare cases, there may be fewer than the number of requested `top_logprobs` returned. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct ChatCompletionTokenLogprobTopLogprobs(pub String);
+pub struct ChatCompletionTokenLogprobTopLogprobs {
+	/** The token. */
+	pub token: String,
+	/** The log probability of this token, if it is within the top 20 most likely tokens. Otherwise, the value `-9999.0` is used to signify that the token is very unlikely. */
+	pub logprob: f32,
+	/** A list of integers representing the UTF-8 bytes representation of the token. Useful in instances where characters are represented by multiple tokens and their byte representations must be combined to generate the correct text representation. Can be `null` if there is no bytes representation for the token. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub bytes: Option<Vec<u64>>,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct ChatCompletionTokenLogprob {
@@ -1916,7 +1974,12 @@ pub enum CodeInterpreterFileOutputType {
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CodeInterpreterFileOutputFiles(pub String);
+pub struct CodeInterpreterFileOutputFiles {
+	/** The MIME type of the file. */
+	pub mime_type: String,
+	/** The ID of the file. */
+	pub file_id: String,
+}
 
 /** The output of a code interpreter tool call that is a file. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -2496,9 +2559,21 @@ pub struct CreateAssistantRequestToolResourcesCodeInterpreter {
 	pub file_ids: Option<Vec<String>>,
 }
 
-	/** A helper to create a [vector store](/docs/api-reference/vector-stores/object) with file_ids and attach it to this assistant. There can be a maximum of 1 vector store attached to the assistant. */
+	/** The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateAssistantRequestToolResourcesFileSearchVectorStores(pub String);
+pub struct CreateAssistantRequestToolResourcesFileSearchVectorStoresChunkingStrategy(pub String);
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateAssistantRequestToolResourcesFileSearchVectorStores {
+	/** A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be a maximum of 10000 files in a vector store. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub file_ids: Option<Vec<String>>,
+	/** The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub chunking_strategy: Option<CreateAssistantRequestToolResourcesFileSearchVectorStoresChunkingStrategy>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub metadata: Option<Metadata>,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateAssistantRequestToolResourcesFileSearch {
@@ -2635,7 +2710,7 @@ The exact effect will vary per model, but values between -1 and 1 should
 decrease or increase likelihood of selection; values like -100 or 100
 should result in a ban or exclusive selection of the relevant token. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateChatCompletionRequestObjectLogitBias(pub String);
+pub struct CreateChatCompletionRequestObjectLogitBias(pub HashMap<String,String>);
 
 /** Configuration for a [Predicted Output](/docs/guides/predicted-outputs),
 which can greatly improve response times when large parts of the model
@@ -2821,9 +2896,45 @@ pub struct CreateChatCompletionRequest {
 	pub object: CreateChatCompletionRequestObject,
 }
 
-	/** A list of chat completion choices. Can be more than one if `n` is greater than 1. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateChatCompletionResponseChoices(pub String);
+pub enum CreateChatCompletionResponseChoicesFinishReason {
+	#[serde(rename="stop")]
+	Stop,
+	#[serde(rename="length")]
+	Length,
+	#[serde(rename="tool_calls")]
+	ToolCalls,
+	#[serde(rename="content_filter")]
+	ContentFilter,
+	#[serde(rename="function_call")]
+	FunctionCall,
+}
+
+/** Log probability information for the choice. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateChatCompletionResponseChoicesLogprobs {
+	/** A list of message content tokens with log probability information. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub content: Option<Vec<ChatCompletionTokenLogprob>>,
+	/** A list of message refusal tokens with log probability information. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub refusal: Option<Vec<ChatCompletionTokenLogprob>>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateChatCompletionResponseChoices {
+	/** The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+`length` if the maximum number of tokens specified in the request was reached,
+`content_filter` if content was omitted due to a flag from our content filters,
+`tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function. */
+	pub finish_reason: CreateChatCompletionResponseChoicesFinishReason,
+	/** The index of the choice in the list of choices. */
+	pub index: u64,
+	pub message: ChatCompletionResponseMessage,
+	/** Log probability information for the choice. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub logprobs: Option<CreateChatCompletionResponseChoicesLogprobs>,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum CreateChatCompletionResponseObject {
@@ -2855,10 +2966,46 @@ Can be used in conjunction with the `seed` request parameter to understand when 
 	pub usage: Option<CompletionUsage>,
 }
 
-	/** A list of chat completion choices. Can contain more than one elements if `n` is greater than 1. Can also be empty for the
-last chunk if you set `stream_options: {"include_usage": true}`. */
+/** Log probability information for the choice. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateChatCompletionStreamResponseChoices(pub String);
+pub struct CreateChatCompletionStreamResponseChoicesLogprobs {
+	/** A list of message content tokens with log probability information. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub content: Option<Vec<ChatCompletionTokenLogprob>>,
+	/** A list of message refusal tokens with log probability information. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub refusal: Option<Vec<ChatCompletionTokenLogprob>>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub enum CreateChatCompletionStreamResponseChoicesFinishReason {
+	#[serde(rename="stop")]
+	Stop,
+	#[serde(rename="length")]
+	Length,
+	#[serde(rename="tool_calls")]
+	ToolCalls,
+	#[serde(rename="content_filter")]
+	ContentFilter,
+	#[serde(rename="function_call")]
+	FunctionCall,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateChatCompletionStreamResponseChoices {
+	pub delta: ChatCompletionStreamResponseDelta,
+	/** Log probability information for the choice. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub logprobs: Option<CreateChatCompletionStreamResponseChoicesLogprobs>,
+	/** The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+`length` if the maximum number of tokens specified in the request was reached,
+`content_filter` if content was omitted due to a flag from our content filters,
+`tool_calls` if the model called a tool, or `function_call` (deprecated) if the model called a function. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub finish_reason: Option<CreateChatCompletionStreamResponseChoicesFinishReason>,
+	/** The index of the choice in the list of choices. */
+	pub index: u64,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum CreateChatCompletionStreamResponseObject {
@@ -2931,7 +3078,7 @@ Accepts a JSON object that maps tokens (specified by their token ID in the GPT t
 
 As an example, you can pass `{"50256": -100}` to prevent the <|endoftext|> token from being generated. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateCompletionRequestLogitBias(pub String);
+pub struct CreateCompletionRequestLogitBias(pub HashMap<String,String>);
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateCompletionRequest {
@@ -3016,9 +3163,42 @@ We generally recommend altering this or `temperature` but not both. */
 	pub user: Option<String>,
 }
 
-	/** The list of completion choices the model generated for the input prompt. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateCompletionResponseChoices(pub String);
+pub enum CreateCompletionResponseChoicesFinishReason {
+	#[serde(rename="stop")]
+	Stop,
+	#[serde(rename="length")]
+	Length,
+	#[serde(rename="content_filter")]
+	ContentFilter,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateCompletionResponseChoicesLogprobsTopLogprobs(pub String);
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateCompletionResponseChoicesLogprobs {
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub text_offset: Option<Vec<u64>>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub token_logprobs: Option<Vec<f32>>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub tokens: Option<Vec<String>>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub top_logprobs: Option<Vec<CreateCompletionResponseChoicesLogprobsTopLogprobs>>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateCompletionResponseChoices {
+	/** The reason the model stopped generating tokens. This will be `stop` if the model hit a natural stop point or a provided stop sequence,
+`length` if the maximum number of tokens specified in the request was reached,
+or `content_filter` if content was omitted due to a flag from our content filters. */
+	pub finish_reason: CreateCompletionResponseChoicesFinishReason,
+	pub index: u64,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub logprobs: Option<CreateCompletionResponseChoicesLogprobs>,
+	pub text: String,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum CreateCompletionResponseObject {
@@ -3638,9 +3818,44 @@ through the training dataset. */
 	pub n_epochs: Option<CreateFineTuningJobRequestHyperparametersNEpochs>,
 }
 
-	/** A list of integrations to enable for your fine-tuning job. */
+/** The type of integration to enable. Currently, only "wandb" (Weights and Biases) is supported. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateFineTuningJobRequestIntegrations(pub String);
+#[serde(untagged)]
+pub enum CreateFineTuningJobRequestIntegrationsType {
+	#[serde(rename="wandb")]
+	Wandb,
+}
+
+/** The settings for your integration with Weights and Biases. This payload specifies the project that
+metrics will be sent to. Optionally, you can set an explicit display name for your run, add tags
+to your run, and set a default entity (team, username, etc) to be associated with your run. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateFineTuningJobRequestIntegrationsWandb {
+	/** The name of the project that the new run will be created under. */
+	pub project: String,
+	/** A display name to set for the run. If not set, we will use the Job ID as the name. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub name: Option<String>,
+	/** The entity to use for the run. This allows you to set the team or username of the WandB user that you would
+like associated with the run. If not set, the default entity for the registered WandB API key is used. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub entity: Option<String>,
+	/** A list of tags to be attached to the newly created run. These tags are passed through directly to WandB. Some
+default tags are generated by OpenAI: "openai/finetune", "openai/{base-model}", "openai/{ftjob-abcdef}". */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub tags: Option<Vec<String>>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateFineTuningJobRequestIntegrations {
+	#[serde(rename="type")]
+	/** The type of integration to enable. Currently, only "wandb" (Weights and Biases) is supported. */
+	pub r#type: CreateFineTuningJobRequestIntegrationsType,
+	/** The settings for your integration with Weights and Biases. This payload specifies the project that
+metrics will be sent to. Optionally, you can set an explicit display name for your run, add tags
+to your run, and set a default entity (team, username, etc) to be associated with your run. */
+	pub wandb: CreateFineTuningJobRequestIntegrationsWandb,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateFineTuningJobRequest {
@@ -4044,9 +4259,22 @@ pub enum CreateMessageRequestContent {
 	ArrayList(Vec<CreateMessageRequestContentArray>),
 }
 
-	/** A list of files attached to the message, and the tools they should be added to. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateMessageRequestAttachments(pub String);
+#[serde(untagged)]
+pub enum CreateMessageRequestAttachmentsTools {
+	AssistantToolsCode(AssistantToolsCode),
+	AssistantToolsFileSearchTypeOnly(AssistantToolsFileSearchTypeOnly),
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateMessageRequestAttachments {
+	/** The ID of the file to attach to the message. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub file_id: Option<String>,
+	/** The tools to add this file to. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub tools: Option<Vec<CreateMessageRequestAttachmentsTools>>,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateMessageRequest {
@@ -4144,9 +4372,136 @@ available models [here](/docs/models#moderation). */
 	pub model: Option<CreateModerationRequestModel>,
 }
 
-	/** A list of moderation objects. */
+/** A list of the categories, and whether they are flagged or not. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateModerationResponseResults(pub String);
+pub struct CreateModerationResponseResultsCategories {
+	/** Content that expresses, incites, or promotes hate based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. Hateful content aimed at non-protected groups (e.g., chess players) is harassment. */
+	pub hate: bool,
+	/** Hateful content that also includes violence or serious harm towards the targeted group based on race, gender, ethnicity, religion, nationality, sexual orientation, disability status, or caste. */
+	#[serde(rename = "hate/threatening")]
+	pub hate_threatening: bool,
+	/** Content that expresses, incites, or promotes harassing language towards any target. */
+	pub harassment: bool,
+	/** Harassment content that also includes violence or serious harm towards any target. */
+	#[serde(rename = "harassment/threatening")]
+	pub harassment_threatening: bool,
+	/** Content that includes instructions or advice that facilitate the planning or execution of wrongdoing, or that gives advice or instruction on how to commit illicit acts. For example, "how to shoplift" would fit this category. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub illicit: Option<bool>,
+	/** Content that includes instructions or advice that facilitate the planning or execution of wrongdoing that also includes violence, or that gives advice or instruction on the procurement of any weapon. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	#[serde(rename = "illicit/violent")]
+	pub illicit_violent: Option<bool>,
+	/** Content that promotes, encourages, or depicts acts of self-harm, such as suicide, cutting, and eating disorders. */
+	#[serde(rename = "self-harm")]
+	pub self_harm: bool,
+	/** Content where the speaker expresses that they are engaging or intend to engage in acts of self-harm, such as suicide, cutting, and eating disorders. */
+	#[serde(rename = "self-harm/intent")]
+	pub self_harm_intent: bool,
+	/** Content that encourages performing acts of self-harm, such as suicide, cutting, and eating disorders, or that gives instructions or advice on how to commit such acts. */
+	#[serde(rename = "self-harm/instructions")]
+	pub self_harm_instructions: bool,
+	/** Content meant to arouse sexual excitement, such as the description of sexual activity, or that promotes sexual services (excluding sex education and wellness). */
+	pub sexual: bool,
+	/** Sexual content that includes an individual who is under 18 years old. */
+	#[serde(rename = "sexual/minors")]
+	pub sexual_minors: bool,
+	/** Content that depicts death, violence, or physical injury. */
+	pub violence: bool,
+	/** Content that depicts death, violence, or physical injury in graphic detail. */
+	#[serde(rename = "violence/graphic")]
+	pub violence_graphic: bool,
+}
+
+/** A list of the categories along with their scores as predicted by model. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateModerationResponseResultsCategoryScores {
+	/** The score for the category 'hate'. */
+	pub hate: f32,
+	/** The score for the category 'hate/threatening'. */
+	#[serde(rename = "hate/threatening")]
+	pub hate_threatening: f32,
+	/** The score for the category 'harassment'. */
+	pub harassment: f32,
+	/** The score for the category 'harassment/threatening'. */
+	#[serde(rename = "harassment/threatening")]
+	pub harassment_threatening: f32,
+	/** The score for the category 'illicit'. */
+	pub illicit: f32,
+	/** The score for the category 'illicit/violent'. */
+	#[serde(rename = "illicit/violent")]
+	pub illicit_violent: f32,
+	/** The score for the category 'self-harm'. */
+	#[serde(rename = "self-harm")]
+	pub self_harm: f32,
+	/** The score for the category 'self-harm/intent'. */
+	#[serde(rename = "self-harm/intent")]
+	pub self_harm_intent: f32,
+	/** The score for the category 'self-harm/instructions'. */
+	#[serde(rename = "self-harm/instructions")]
+	pub self_harm_instructions: f32,
+	/** The score for the category 'sexual'. */
+	pub sexual: f32,
+	/** The score for the category 'sexual/minors'. */
+	#[serde(rename = "sexual/minors")]
+	pub sexual_minors: f32,
+	/** The score for the category 'violence'. */
+	pub violence: f32,
+	/** The score for the category 'violence/graphic'. */
+	#[serde(rename = "violence/graphic")]
+	pub violence_graphic: f32,
+}
+
+/** A list of the categories along with the input type(s) that the score applies to. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateModerationResponseResultsCategoryAppliedInputTypes {
+	/** The applied input type(s) for the category 'hate'. */
+	pub hate: Vec<String>,
+	/** The applied input type(s) for the category 'hate/threatening'. */
+	#[serde(rename = "hate/threatening")]
+	pub hate_threatening: Vec<String>,
+	/** The applied input type(s) for the category 'harassment'. */
+	pub harassment: Vec<String>,
+	/** The applied input type(s) for the category 'harassment/threatening'. */
+	#[serde(rename = "harassment/threatening")]
+	pub harassment_threatening: Vec<String>,
+	/** The applied input type(s) for the category 'illicit'. */
+	pub illicit: Vec<String>,
+	/** The applied input type(s) for the category 'illicit/violent'. */
+	#[serde(rename = "illicit/violent")]
+	pub illicit_violent: Vec<String>,
+	/** The applied input type(s) for the category 'self-harm'. */
+	#[serde(rename = "self-harm")]
+	pub self_harm: Vec<String>,
+	/** The applied input type(s) for the category 'self-harm/intent'. */
+	#[serde(rename = "self-harm/intent")]
+	pub self_harm_intent: Vec<String>,
+	/** The applied input type(s) for the category 'self-harm/instructions'. */
+	#[serde(rename = "self-harm/instructions")]
+	pub self_harm_instructions: Vec<String>,
+	/** The applied input type(s) for the category 'sexual'. */
+	pub sexual: Vec<String>,
+	/** The applied input type(s) for the category 'sexual/minors'. */
+	#[serde(rename = "sexual/minors")]
+	pub sexual_minors: Vec<String>,
+	/** The applied input type(s) for the category 'violence'. */
+	pub violence: Vec<String>,
+	/** The applied input type(s) for the category 'violence/graphic'. */
+	#[serde(rename = "violence/graphic")]
+	pub violence_graphic: Vec<String>,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateModerationResponseResults {
+	/** Whether any of the below categories are flagged. */
+	pub flagged: bool,
+	/** A list of the categories, and whether they are flagged or not. */
+	pub categories: CreateModerationResponseResultsCategories,
+	/** A list of the categories along with their scores as predicted by model. */
+	pub category_scores: CreateModerationResponseResultsCategoryScores,
+	/** A list of the categories along with the input type(s) that the score applies to. */
+	pub category_applied_input_types: CreateModerationResponseResultsCategoryAppliedInputTypes,
+}
 
 /** Represents if a given text input is potentially harmful. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -4550,9 +4905,21 @@ pub struct CreateThreadRequestToolResourcesCodeInterpreter {
 	pub file_ids: Option<Vec<String>>,
 }
 
-	/** A helper to create a [vector store](/docs/api-reference/vector-stores/object) with file_ids and attach it to this thread. There can be a maximum of 1 vector store attached to the thread. */
+	/** The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateThreadRequestToolResourcesFileSearchVectorStores(pub String);
+pub struct CreateThreadRequestToolResourcesFileSearchVectorStoresChunkingStrategy(pub String);
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct CreateThreadRequestToolResourcesFileSearchVectorStores {
+	/** A list of [file](/docs/api-reference/files) IDs to add to the vector store. There can be a maximum of 10000 files in a vector store. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub file_ids: Option<Vec<String>>,
+	/** The chunking strategy used to chunk the file(s). If not set, will use the `auto` strategy. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub chunking_strategy: Option<CreateThreadRequestToolResourcesFileSearchVectorStoresChunkingStrategy>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub metadata: Option<Metadata>,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct CreateThreadRequestToolResourcesFileSearch {
@@ -4652,9 +5019,18 @@ Note: Streaming is not supported for the `whisper-1` model and will be ignored. 
 	pub chunking_strategy: Option<CreateTranscriptionRequestChunkingStrategy>,
 }
 
-	/** The log probabilities of the tokens in the transcription. Only returned with the models `gpt-4o-transcribe` and `gpt-4o-mini-transcribe` if `logprobs` is added to the `include` array. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct CreateTranscriptionResponseJsonLogprobs(pub String);
+pub struct CreateTranscriptionResponseJsonLogprobs {
+	/** The token in the transcription. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub token: Option<String>,
+	/** The log probability of the token. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub logprob: Option<f32>,
+	/** The bytes of the token. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub bytes: Option<Vec<f32>>,
+}
 
 	/** Token usage statistics for the request. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -5286,9 +5662,18 @@ pub enum EvalJsonlFileContentSourceType {
 	FileContent,
 }
 
-	/** The content of the jsonl file. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct EvalJsonlFileContentSourceContent(pub String);
+pub struct EvalJsonlFileContentSourceContentItem(pub String);
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct EvalJsonlFileContentSourceContentSample(pub String);
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct EvalJsonlFileContentSourceContent {
+	pub item: EvalJsonlFileContentSourceContentItem,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub sample: Option<EvalJsonlFileContentSourceContentSample>,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct EvalJsonlFileContentSource {
@@ -5429,13 +5814,31 @@ pub struct EvalRunResultCounts {
 	pub passed: u64,
 }
 
-	/** Usage statistics for each model during the evaluation run. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct EvalRunPerModelUsage(pub String);
+pub struct EvalRunPerModelUsage {
+	/** The name of the model. */
+	pub model_name: String,
+	/** The number of invocations. */
+	pub invocation_count: u64,
+	/** The number of prompt tokens used. */
+	pub prompt_tokens: u64,
+	/** The number of completion tokens generated. */
+	pub completion_tokens: u64,
+	/** The total number of tokens used. */
+	pub total_tokens: u64,
+	/** The number of tokens retrieved from cache. */
+	pub cached_tokens: u64,
+}
 
-	/** Results per testing criteria applied during the evaluation run. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct EvalRunPerTestingCriteriaResults(pub String);
+pub struct EvalRunPerTestingCriteriaResults {
+	/** A description of the testing criteria. */
+	pub testing_criteria: String,
+	/** Number of tests passed for this criteria. */
+	pub passed: u64,
+	/** Number of tests failed for this criteria. */
+	pub failed: u64,
+}
 
 	/** Information about the run's data source. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -5503,17 +5906,28 @@ pub enum EvalRunOutputItemObject {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct EvalRunOutputItemDatasourceItem(pub String);
 
-	/** A list of results from the evaluation run. */
+	/** A result object. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct EvalRunOutputItemResults(pub String);
 
-	/** An array of input messages. */
+/** An input message. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct EvalRunOutputItemSampleInput(pub String);
+pub struct EvalRunOutputItemSampleInput {
+	/** The role of the message sender (e.g., system, user, developer). */
+	pub role: String,
+	/** The content of the message. */
+	pub content: String,
+}
 
-	/** An array of output messages. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct EvalRunOutputItemSampleOutput(pub String);
+pub struct EvalRunOutputItemSampleOutput {
+	/** The role of the message (e.g. "system", "assistant", "user"). */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub role: Option<String>,
+	/** The content of the message. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub content: Option<String>,
+}
 
 /** Token usage details for the sample. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -5702,9 +6116,23 @@ pub enum FileSearchToolCallStatus {
 	Failed,
 }
 
-	/** The results of the file search tool call. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct FileSearchToolCallResults(pub String);
+pub struct FileSearchToolCallResults {
+	/** The unique ID of the file. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub file_id: Option<String>,
+	/** The text that was retrieved from the file. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub text: Option<String>,
+	/** The name of the file. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub filename: Option<String>,
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub attributes: Option<VectorStoreFileAttributes>,
+	/** The relevance score of the file - a value between 0 and 1. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub score: Option<f32>,
+}
 
 /** The results of a file search tool call. See the 
 [file search guide](/docs/guides/tools-file-search) for more information. */
@@ -7061,9 +7489,23 @@ pub enum InviteStatus {
 	Pending,
 }
 
-	/** The projects that were granted membership upon acceptance of the invite. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct InviteProjects(pub String);
+pub enum InviteProjectsRole {
+	#[serde(rename="member")]
+	Member,
+	#[serde(rename="owner")]
+	Owner,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct InviteProjects {
+	/** Project's public ID */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub id: Option<String>,
+	/** Project membership role */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub role: Option<InviteProjectsRole>,
+}
 
 /** Represents an individual `invite` to the organization. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -7134,9 +7576,21 @@ pub enum InviteRequestRole {
 	Owner,
 }
 
-	/** An array of projects to which membership is granted at the same time the org invite is accepted. If omitted, the user will be invited to the default project for compatibility with legacy behavior. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct InviteRequestProjects(pub String);
+pub enum InviteRequestProjectsRole {
+	#[serde(rename="member")]
+	Member,
+	#[serde(rename="owner")]
+	Owner,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct InviteRequestProjects {
+	/** Project's public ID */
+	pub id: String,
+	/** Project membership role */
+	pub role: InviteRequestProjectsRole,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct InviteRequest {
@@ -8192,9 +8646,22 @@ pub enum MessageObjectContent {
 	MessageContentRefusalObject(MessageContentRefusalObject),
 }
 
-	/** A list of files attached to the message, and the tools they were added to. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct MessageObjectAttachments(pub String);
+#[serde(untagged)]
+pub enum MessageObjectAttachmentsTools {
+	AssistantToolsCode(AssistantToolsCode),
+	AssistantToolsFileSearchTypeOnly(AssistantToolsFileSearchTypeOnly),
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct MessageObjectAttachments {
+	/** The ID of the file to attach to the message. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub file_id: Option<String>,
+	/** The tools to add this file to. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub tools: Option<Vec<MessageObjectAttachmentsTools>>,
+}
 
 /** Represents a message within a [thread](/docs/api-reference/threads). */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -9575,13 +10042,39 @@ pub enum RealtimeConversationItemRole {
 	System,
 }
 
-	/** The content of the message, applicable for `message` items. 
-- Message items of role `system` support only `input_text` content
-- Message items of role `user` support `input_text` and `input_audio` 
-  content
-- Message items of role `assistant` support `text` content. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RealtimeConversationItemContent(pub String);
+pub enum RealtimeConversationItemContentType {
+	#[serde(rename="input_audio")]
+	InputAudio,
+	#[serde(rename="input_text")]
+	InputText,
+	#[serde(rename="item_reference")]
+	ItemReference,
+	#[serde(rename="text")]
+	Text,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeConversationItemContent {
+	#[serde(rename="type")]
+	/** The content type (`input_text`, `input_audio`, `item_reference`, `text`). */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub r#type: Option<RealtimeConversationItemContentType>,
+	/** The text content, used for `input_text` and `text` content types. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub text: Option<String>,
+	/** ID of a previous conversation item to reference (for `item_reference`
+content types in `response.create` events). These can reference both
+client and server created items. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub id: Option<String>,
+	/** Base64-encoded audio bytes, used for `input_audio` content type. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub audio: Option<String>,
+	/** The transcript of the audio, used for `input_audio` content type. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub transcript: Option<String>,
+}
 
 /** The item to add to the conversation. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -9665,13 +10158,39 @@ pub enum RealtimeConversationItemWithReferenceRole {
 	System,
 }
 
-	/** The content of the message, applicable for `message` items. 
-- Message items of role `system` support only `input_text` content
-- Message items of role `user` support `input_text` and `input_audio` 
-  content
-- Message items of role `assistant` support `text` content. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RealtimeConversationItemWithReferenceContent(pub String);
+pub enum RealtimeConversationItemWithReferenceContentType {
+	#[serde(rename="input_audio")]
+	InputAudio,
+	#[serde(rename="input_text")]
+	InputText,
+	#[serde(rename="item_reference")]
+	ItemReference,
+	#[serde(rename="text")]
+	Text,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeConversationItemWithReferenceContent {
+	#[serde(rename="type")]
+	/** The content type (`input_text`, `input_audio`, `item_reference`, `text`). */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub r#type: Option<RealtimeConversationItemWithReferenceContentType>,
+	/** The text content, used for `input_text` and `text` content types. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub text: Option<String>,
+	/** ID of a previous conversation item to reference (for `item_reference`
+content types in `response.create` events). These can reference both
+client and server created items. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub id: Option<String>,
+	/** Base64-encoded audio bytes, used for `input_audio` content type. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub audio: Option<String>,
+	/** The transcript of the audio, used for `input_audio` content type. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub transcript: Option<String>,
+}
 
 /** The item to add to the conversation. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -9940,9 +10459,34 @@ pub enum RealtimeResponseCreateParamsOutputAudioFormat {
 	G711Alaw,
 }
 
-	/** Tools (functions) available to the model. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RealtimeResponseCreateParamsTools(pub String);
+pub enum RealtimeResponseCreateParamsToolsType {
+	#[serde(rename="function")]
+	Function,
+}
+
+	/** Parameters of the function in JSON Schema. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeResponseCreateParamsToolsParameters(pub String);
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeResponseCreateParamsTools {
+	#[serde(rename="type")]
+	/** The type of the tool, i.e. `function`. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub r#type: Option<RealtimeResponseCreateParamsToolsType>,
+	/** The name of the function. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub name: Option<String>,
+	/** The description of the function, including guidance on when and how 
+to call it, and guidance about what to tell the user when calling 
+(if anything). */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub description: Option<String>,
+	/** Parameters of the function in JSON Schema. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub parameters: Option<RealtimeResponseCreateParamsToolsParameters>,
+}
 
 /** Maximum number of output tokens for a single assistant response,
 inclusive of tool calls. Provide an integer between 1 and 4096 to
@@ -10505,9 +11049,29 @@ pub enum RealtimeServerEventRateLimitsUpdatedType {
 	RateLimitsUpdated,
 }
 
-	/** List of rate limit information. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RealtimeServerEventRateLimitsUpdatedRateLimits(pub String);
+pub enum RealtimeServerEventRateLimitsUpdatedRateLimitsName {
+	#[serde(rename="requests")]
+	Requests,
+	#[serde(rename="tokens")]
+	Tokens,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeServerEventRateLimitsUpdatedRateLimits {
+	/** The name of the rate limit (`requests`, `tokens`). */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub name: Option<RealtimeServerEventRateLimitsUpdatedRateLimitsName>,
+	/** The maximum allowed value for the rate limit. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub limit: Option<u64>,
+	/** The remaining value before the limit is reached. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub remaining: Option<u64>,
+	/** Seconds until the rate limit resets. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub reset_seconds: Option<f32>,
+}
 
 /** Emitted at the beginning of a Response to indicate the updated rate limits. 
 When a Response is created some tokens will be "reserved" for the output 
@@ -11129,9 +11693,34 @@ pub enum RealtimeSessionTracing {
 	},
 }
 
-	/** Tools (functions) available to the model. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RealtimeSessionTools(pub String);
+pub enum RealtimeSessionToolsType {
+	#[serde(rename="function")]
+	Function,
+}
+
+	/** Parameters of the function in JSON Schema. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeSessionToolsParameters(pub String);
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeSessionTools {
+	#[serde(rename="type")]
+	/** The type of the tool, i.e. `function`. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub r#type: Option<RealtimeSessionToolsType>,
+	/** The name of the function. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub name: Option<String>,
+	/** The description of the function, including guidance on when and how 
+to call it, and guidance about what to tell the user when calling 
+(if anything). */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub description: Option<String>,
+	/** Parameters of the function in JSON Schema. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub parameters: Option<RealtimeSessionToolsParameters>,
+}
 
 /** Maximum number of output tokens for a single assistant response,
 inclusive of tool calls. Provide an integer between 1 and 4096 to
@@ -11384,9 +11973,34 @@ pub enum RealtimeSessionCreateRequestTracing {
 	},
 }
 
-	/** Tools (functions) available to the model. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RealtimeSessionCreateRequestTools(pub String);
+pub enum RealtimeSessionCreateRequestToolsType {
+	#[serde(rename="function")]
+	Function,
+}
+
+	/** Parameters of the function in JSON Schema. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeSessionCreateRequestToolsParameters(pub String);
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeSessionCreateRequestTools {
+	#[serde(rename="type")]
+	/** The type of the tool, i.e. `function`. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub r#type: Option<RealtimeSessionCreateRequestToolsType>,
+	/** The name of the function. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub name: Option<String>,
+	/** The description of the function, including guidance on when and how
+to call it, and guidance about what to tell the user when calling
+(if anything). */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub description: Option<String>,
+	/** Parameters of the function in JSON Schema. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub parameters: Option<RealtimeSessionCreateRequestToolsParameters>,
+}
 
 /** Maximum number of output tokens for a single assistant response,
 inclusive of tool calls. Provide an integer between 1 and 4096 to
@@ -11573,9 +12187,34 @@ but may jump in on short pauses from the user. */
 	pub silence_duration_ms: Option<u64>,
 }
 
-	/** Tools (functions) available to the model. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RealtimeSessionCreateResponseTools(pub String);
+pub enum RealtimeSessionCreateResponseToolsType {
+	#[serde(rename="function")]
+	Function,
+}
+
+	/** Parameters of the function in JSON Schema. */
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeSessionCreateResponseToolsParameters(pub String);
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RealtimeSessionCreateResponseTools {
+	#[serde(rename="type")]
+	/** The type of the tool, i.e. `function`. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub r#type: Option<RealtimeSessionCreateResponseToolsType>,
+	/** The name of the function. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub name: Option<String>,
+	/** The description of the function, including guidance on when and how 
+to call it, and guidance about what to tell the user when calling 
+(if anything). */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub description: Option<String>,
+	/** Parameters of the function in JSON Schema. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub parameters: Option<RealtimeSessionCreateResponseToolsParameters>,
+}
 
 /** Maximum number of output tokens for a single assistant response,
 inclusive of tool calls. Provide an integer between 1 and 4096 to
@@ -11989,9 +12628,21 @@ pub enum ReasoningItemType {
 	Reasoning,
 }
 
-	/** Reasoning text contents. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct ReasoningItemSummary(pub String);
+pub enum ReasoningItemSummaryType {
+	#[serde(rename="summary_text")]
+	SummaryText,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct ReasoningItemSummary {
+	#[serde(rename="type")]
+	/** The type of the object. Always `summary_text`. */
+	pub r#type: ReasoningItemSummaryType,
+	/** A short summary of the reasoning used by the model when generating
+the response. */
+	pub text: String,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub enum ReasoningItemStatus {
@@ -13915,7 +14566,6 @@ pub enum RunStepDeltaStepDetailsToolCallsCodeObjectType {
 	CodeInterpreter,
 }
 
-	/** The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct RunStepDeltaStepDetailsToolCallsCodeObjectCodeInterpreterOutputs(pub String);
 
@@ -13997,7 +14647,7 @@ pub enum RunStepDeltaStepDetailsToolCallsFileSearchObjectType {
 
 	/** For now, this is always going to be an empty object. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RunStepDeltaStepDetailsToolCallsFileSearchObjectFileSearch(pub String);
+pub struct RunStepDeltaStepDetailsToolCallsFileSearchObjectFileSearch(pub HashMap<String,String>);
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct RunStepDeltaStepDetailsToolCallsFileSearchObject {
@@ -14100,7 +14750,6 @@ pub enum RunStepDetailsToolCallsCodeObjectType {
 	CodeInterpreter,
 }
 
-	/** The outputs from the Code Interpreter tool call. Code Interpreter can output one or more items, including text (`logs`) or images (`image`). Each of these are represented by a different object type. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct RunStepDetailsToolCallsCodeObjectCodeInterpreterOutputs(pub String);
 
@@ -14196,9 +14845,22 @@ pub struct RunStepDetailsToolCallsFileSearchRankingOptionsObject {
 	pub score_threshold: f32,
 }
 
-	/** The content of the result that was found. The content is only included if requested via the include query parameter. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct RunStepDetailsToolCallsFileSearchResultObjectContent(pub String);
+pub enum RunStepDetailsToolCallsFileSearchResultObjectContentType {
+	#[serde(rename="text")]
+	Text,
+}
+
+#[derive(Debug, PartialEq, Serialize, Deserialize)]
+pub struct RunStepDetailsToolCallsFileSearchResultObjectContent {
+	#[serde(rename="type")]
+	/** The type of the content. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub r#type: Option<RunStepDetailsToolCallsFileSearchResultObjectContentType>,
+	/** The text content of the file. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub text: Option<String>,
+}
 
 /** A result instance of the file search. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -14621,9 +15283,15 @@ pub enum StopConfiguration {
 	ArrayString(Vec<String>),
 }
 
-	/** A list of tools for which the outputs are being submitted. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct SubmitToolOutputsRunRequestToolOutputs(pub String);
+pub struct SubmitToolOutputsRunRequestToolOutputs {
+	/** The ID of the tool call in the `required_action` object within the run object the output is being submitted for. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub tool_call_id: Option<String>,
+	/** The output of the tool call to be submitted to continue the run. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub output: Option<String>,
+}
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 pub struct SubmitToolOutputsRunRequest {
@@ -14843,9 +15511,18 @@ pub enum TranscriptTextDeltaEventType {
 	TranscriptTextDelta,
 }
 
-	/** The log probabilities of the delta. Only included if you [create a transcription](/docs/api-reference/audio/create-transcription) with the `include[]` parameter set to `logprobs`. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct TranscriptTextDeltaEventLogprobs(pub String);
+pub struct TranscriptTextDeltaEventLogprobs {
+	/** The token that was used to generate the log probability. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub token: Option<String>,
+	/** The log probability of the token. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub logprob: Option<f32>,
+	/** The bytes that were used to generate the log probability. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub bytes: Option<Vec<u64>>,
+}
 
 /** Emitted when there is an additional text delta. This is also the first event emitted when the transcription starts. Only emitted when you [create a transcription](/docs/api-reference/audio/create-transcription) with the `Stream` parameter set to `true`. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -14866,9 +15543,18 @@ pub enum TranscriptTextDoneEventType {
 	TranscriptTextDone,
 }
 
-	/** The log probabilities of the individual tokens in the transcription. Only included if you [create a transcription](/docs/api-reference/audio/create-transcription) with the `include[]` parameter set to `logprobs`. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct TranscriptTextDoneEventLogprobs(pub String);
+pub struct TranscriptTextDoneEventLogprobs {
+	/** The token that was used to generate the log probability. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub token: Option<String>,
+	/** The log probability of the token. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub logprob: Option<f32>,
+	/** The bytes that were used to generate the log probability. */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub bytes: Option<Vec<u64>>,
+}
 
 /** Emitted when the transcription is complete. Contains the complete transcription text. Only emitted when you [create a transcription](/docs/api-reference/audio/create-transcription) with the `Stream` parameter set to `true`. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -15580,9 +16266,16 @@ pub enum VectorStoreFileContentResponseObject {
 	VectorStoreFileContentPage,
 }
 
-	/** Parsed content of the file. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
-pub struct VectorStoreFileContentResponseData(pub String);
+pub struct VectorStoreFileContentResponseData {
+	#[serde(rename="type")]
+	/** The content type (currently only `"text"`) */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub r#type: Option<String>,
+	/** The text content */
+	#[serde(skip_serializing_if = "Option::is_none")]
+	pub text: Option<String>,
+}
 
 /** Represents the parsed content of a vector store file. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
