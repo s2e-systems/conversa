@@ -36,7 +36,7 @@ impl TryFrom<&std::path::Path> for File {
 // so the methods to do this are manually defined here
 
 impl crate::types::CreateTranscriptionRequest {
-    pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
+    pub(crate) fn into_multipart_form(self) -> reqwest::multipart::Form {
         let file_part = reqwest::multipart::Part::bytes(self.file.file_data.clone())
             .mime_str("application/octet-stream")
             .unwrap()
@@ -53,7 +53,7 @@ impl crate::types::CreateTranscriptionRequest {
 }
 
 impl crate::types::CreateTranslationRequest {
-    pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
+    pub(crate) fn into_multipart_form(self) -> reqwest::multipart::Form {
         let file_part = reqwest::multipart::Part::bytes(self.file.file_data.clone())
             .mime_str("application/octet-stream")
             .unwrap()
@@ -70,7 +70,7 @@ impl crate::types::CreateTranslationRequest {
 }
 
 impl crate::types::CreateContainerFileBody {
-    pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
+    pub(crate) fn into_multipart_form(self) -> reqwest::multipart::Form {
         let form = reqwest::multipart::Form::new();
         if let Some(file) = &self.file {
             let file_part = reqwest::multipart::Part::bytes(file.file_data.clone())
@@ -85,7 +85,7 @@ impl crate::types::CreateContainerFileBody {
 }
 
 impl crate::types::CreateFileRequest {
-    pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
+    pub(crate) fn into_multipart_form(self) -> reqwest::multipart::Form {
         let file_part = reqwest::multipart::Part::bytes(self.file.file_data.clone())
             .mime_str("application/octet-stream")
             .unwrap()
@@ -102,19 +102,19 @@ impl crate::types::CreateFileRequest {
 }
 
 impl crate::types::CreateImageEditRequest {
-    pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
+    pub(crate) fn into_multipart_form(self) -> reqwest::multipart::Form {
         todo!()
     }
 }
 
 impl crate::types::CreateImageVariationRequest {
-    pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
+    pub(crate) fn into_multipart_form(self) -> reqwest::multipart::Form {
         todo!()
     }
 }
 
 impl crate::types::AddUploadPartRequest {
-    pub(crate) fn into_multipart_form(&self) -> reqwest::multipart::Form {
+    pub(crate) fn into_multipart_form(self) -> reqwest::multipart::Form {
         todo!()
     }
 }
