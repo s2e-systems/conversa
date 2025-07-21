@@ -1,6 +1,6 @@
 [package]
 name = "conversa_openai_client"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
 authors = ["Joao Rebelo <jrebelo@s2e-systems.com>"]
 license = "Apache-2.0"
@@ -11,7 +11,7 @@ categories = ["api-bindings", "web-programming::http-client"]
 description = "A native Rust client for the complete OpenAI REST API."
 
 [dependencies]
-reqwest = "0.12.22"
+reqwest = { version = "0.12.22", features = ["multipart"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 tokio = { version = "1.46.0", features = ["rt", "macros"] }

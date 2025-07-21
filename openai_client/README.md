@@ -4,7 +4,7 @@ A native Rust client for the complete OpenAI REST API.
 
 [![Crates.io](https://img.shields.io/crates/v/conversa_openai_client.svg)](https://crates.io/crates/conversa_openai_client)
 [![Docs.rs](https://docs.rs/conversa_openai_client/badge.svg)](https://docs.rs/conversa_openai_client)
-[![License](https://img.shields.io/crates/l/conversa_openai_client.svg)](./LICENSE)
+[![License](https://img.shields.io/crates/l/conversa_openai_client.svg)](../LICENSE)
 
 ---
 
