@@ -79,7 +79,7 @@ fn str_to_snake_case(s: &str) -> String {
 
 fn generate_inner_object_name(object_name: &str, field_name: &str) -> String {
     let camel_field_name = str_to_camel_case(field_name);
-    format!("{}{}", object_name, camel_field_name)
+    format!("{object_name}{camel_field_name}",)
 }
 
 fn parse_string_enum(name: &str, schema: &Yaml, output_file: &mut File) {
@@ -95,7 +95,7 @@ fn parse_string_enum(name: &str, schema: &Yaml, output_file: &mut File) {
         "#[derive(Debug, PartialEq, Serialize, Deserialize)]"
     )
     .unwrap();
-    writeln!(output_file, "pub enum {} {{", name).unwrap();
+    writeln!(output_file, "pub enum {name} {{",).unwrap();
 
     for item in enum_items {
         writeln!(
@@ -129,14 +129,9 @@ fn parse_typedef_type(name: &str, schema: &Yaml, output_file: &mut File) {
     match type_name {
         "string" => {
             if let Some("map") = schema["x-oaiTypeLabel"].as_str() {
-                writeln!(
-                    output_file,
-                    "pub type {} = HashMap<String, String>;\n",
-                    name
-                )
-                .unwrap()
+                writeln!(output_file, "pub type {name} = HashMap<String, String>;\n",).unwrap()
             } else {
-                writeln!(output_file, "pub type {} = String;\n", name).unwrap()
+                writeln!(output_file, "pub type {name} = String;\n",).unwrap()
             }
         }
         "array" => {
@@ -156,10 +151,10 @@ fn parse_typedef_type(name: &str, schema: &Yaml, output_file: &mut File) {
                 .unwrap()
                 == "string"
             {
-                writeln!(output_file, "pub type {} = Vec<String>;\n", name,).unwrap();
+                writeln!(output_file, "pub type {name} = Vec<String>;\n",).unwrap();
             }
         }
-        "boolean" => writeln!(output_file, "pub type {} = bool;\n", name).unwrap(),
+        "boolean" => writeln!(output_file, "pub type {name} = bool;\n",).unwrap(),
         _ => unimplemented!("{}", type_name),
     }
 }
@@ -247,7 +242,7 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
             .get(&Yaml::String("description".to_string()))
             .map(|x| x.as_str().unwrap().trim_end().replace("```", "***"))
         {
-            writeln!(output_file, "/** {} */", doc).unwrap();
+            writeln!(output_file, "/** {doc} */",).unwrap();
         }
 
         writeln!(
@@ -255,7 +250,7 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
             "#[derive(Debug, PartialEq, Serialize, Deserialize)]"
         )
         .unwrap();
-        writeln!(output_file, "pub struct {} {{", name).unwrap();
+        writeln!(output_file, "pub struct {name} {{",).unwrap();
 
         let object_required_list = schema_map
             .get(&Yaml::String("required".to_string()))
@@ -347,16 +342,16 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
                 unimplemented!("{:?} {:?}", property_name, property_value)
             };
             if field_name == "type" {
-                writeln!(output_file, "\t#[serde(rename=\"{}\")]", field_name,).unwrap();
+                writeln!(output_file, "\t#[serde(rename=\"{field_name}\")]",).unwrap();
                 field_name = "r#type".to_string();
             } else if field_name == "static" {
-                writeln!(output_file, "\t#[serde(rename=\"{}\")]", field_name,).unwrap();
+                writeln!(output_file, "\t#[serde(rename=\"{field_name}\")]",).unwrap();
                 field_name = "r#static".to_string();
             } else if field_name.contains('.') {
-                writeln!(output_file, "\t#[serde(rename=\"{}\")]", field_name,).unwrap();
+                writeln!(output_file, "\t#[serde(rename=\"{field_name}\")]",).unwrap();
                 field_name = field_name.replace('.', "_");
             } else if field_name.contains("[]") {
-                writeln!(output_file, "\t#[serde(rename=\"{}\")]", field_name,).unwrap();
+                writeln!(output_file, "\t#[serde(rename=\"{field_name}\")]",).unwrap();
                 field_name = field_name.replace("[]", "");
             }
 
@@ -364,7 +359,7 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
                 .get(&Yaml::String("description".to_string()))
                 .map(|x| x.as_str().unwrap().trim_end().replace("```", "***"))
             {
-                writeln!(output_file, "\t/** {} */", doc).unwrap();
+                writeln!(output_file, "\t/** {doc} */",).unwrap();
             }
 
             let is_nullable = if let Some(Yaml::Boolean(n)) =
@@ -377,16 +372,15 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
 
             if object_required_list.contains(property_name) && !is_nullable {
                 if field_name.contains(['-', '/']) {
-                    writeln!(output_file, "\t#[serde(rename = \"{}\")]", field_name).unwrap();
+                    writeln!(output_file, "\t#[serde(rename = \"{field_name}\")]",).unwrap();
                     writeln!(
                         output_file,
-                        "\tpub {}: {},",
+                        "\tpub {}: {field_type},",
                         str_to_snake_case(&field_name),
-                        field_type
                     )
                     .unwrap();
                 } else {
-                    writeln!(output_file, "\tpub {}: {},", field_name, field_type).unwrap();
+                    writeln!(output_file, "\tpub {field_name}: {field_type},",).unwrap();
                 }
             } else {
                 writeln!(
@@ -395,16 +389,15 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
                 )
                 .unwrap();
                 if field_name.contains(['-', '/']) {
-                    writeln!(output_file, "\t#[serde(rename = \"{}\")]", field_name).unwrap();
+                    writeln!(output_file, "\t#[serde(rename = \"{field_name}\")]",).unwrap();
                     writeln!(
                         output_file,
-                        "\tpub {}: Option<{}>,",
+                        "\tpub {}: Option<{field_type}>,",
                         str_to_snake_case(&field_name),
-                        field_type
                     )
                     .unwrap();
                 } else {
-                    writeln!(output_file, "\tpub {}: Option<{}>,", field_name, field_type).unwrap();
+                    writeln!(output_file, "\tpub {field_name}: Option<{field_type}>,",).unwrap();
                 }
             }
         }
@@ -415,7 +408,7 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
             .get(&Yaml::String("description".to_string()))
             .map(|x| x.as_str().unwrap().trim_end().replace("```", "***"))
         {
-            writeln!(output_file, "\t/** {} */", doc).unwrap();
+            writeln!(output_file, "\t/** {doc} */",).unwrap();
         }
 
         writeln!(
@@ -427,12 +420,12 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
             let type_label_str = type_label.as_str().unwrap();
             match type_label_str {
                 "map" => {
-                    writeln!(output_file, "pub struct {}(pub serde_json::Value);\n", name).unwrap()
+                    writeln!(output_file, "pub struct {name}(pub serde_json::Value);\n",).unwrap()
                 }
-                _ => unimplemented!("{} with type label {:?}", name, type_label),
+                _ => unimplemented!("{name} with type label {type_label:?}",),
             }
         } else {
-            writeln!(output_file, "pub struct {}(pub String);\n", name).unwrap();
+            writeln!(output_file, "pub struct {name}(pub String);\n",).unwrap();
         }
     }
 }
@@ -511,7 +504,7 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
         .get(&Yaml::String("description".to_string()))
         .map(|x| x.as_str().unwrap().trim_end().replace("```", "***"))
     {
-        writeln!(output_file, "/** {} */", doc).unwrap();
+        writeln!(output_file, "/** {doc} */",).unwrap();
     }
 
     writeln!(
@@ -520,7 +513,7 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
     )
     .unwrap();
     writeln!(output_file, "#[serde(untagged)]").unwrap();
-    writeln!(output_file, "pub enum {} {{", name).unwrap();
+    writeln!(output_file, "pub enum {name} {{",).unwrap();
 
     let mut string_enum_already_processed = false;
     for (index, one_of_variant) in one_of_list.iter().enumerate() {
@@ -529,12 +522,12 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
             .get(&Yaml::String("description".to_string()))
             .map(|x| x.as_str().unwrap().trim_end().replace("```", "***"))
         {
-            writeln!(output_file, "\t/** {} */", doc).unwrap();
+            writeln!(output_file, "\t/** {doc} */",).unwrap();
         }
 
         if let Some(variant_ref) = one_of_variant_hash.get(&Yaml::String("$ref".to_string())) {
             let variant_name = get_object_name_from_reference(variant_ref.as_str().unwrap());
-            writeln!(output_file, "\t{}({}),", variant_name, variant_name).unwrap();
+            writeln!(output_file, "\t{variant_name}({variant_name}),",).unwrap();
         } else if one_of_variant_hash
             .get(&Yaml::String("$recursiveRef".to_string()))
             .is_some()
@@ -582,7 +575,7 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
                         continue;
                     };
 
-                    writeln!(output_file, "\t{} {{", variant_title).unwrap();
+                    writeln!(output_file, "\t{variant_title} {{",).unwrap();
                     let schema_properties_map = schema_properties.as_hash().unwrap();
                     for (property_name, property_value) in schema_properties_map {
                         let mut property_name = property_name.as_str().unwrap();
@@ -636,11 +629,11 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
                             )
                         };
                         if property_name == "type" {
-                            writeln!(output_file, "\t\t#[serde(rename=\"{}\")]", property_name)
+                            writeln!(output_file, "\t\t#[serde(rename=\"{property_name}\")]",)
                                 .unwrap();
                             property_name = "r#type";
                         }
-                        writeln!(output_file, "\t\t{}: {},", property_name, property_type).unwrap();
+                        writeln!(output_file, "\t\t{property_name}: {property_type},",).unwrap();
                     }
 
                     writeln!(output_file, "\t}},",).unwrap();
@@ -685,7 +678,7 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
                         items_hash.get(&Yaml::String("$ref".to_string()))
                     {
                         let variant_name = get_object_name_from_reference(item_ref);
-                        writeln!(output_file, "\tArrayList(Vec<{}>),", variant_name).unwrap();
+                        writeln!(output_file, "\tArrayList(Vec<{variant_name}>),").unwrap();
                     } else if items_hash.get(&Yaml::String("oneOf".to_string())).is_some() {
                         writeln!(
                             output_file,
@@ -697,10 +690,10 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
                         unimplemented!("{:?}", items_hash)
                     }
                 }
-                _ => panic!("{:?}", variant_type),
+                _ => panic!("{variant_type:?}",),
             }
         } else {
-            unimplemented!("{:?}", one_of_variant_hash)
+            unimplemented!("{one_of_variant_hash:?}",)
         }
     }
     writeln!(output_file, "}}\n").unwrap();
@@ -731,7 +724,7 @@ fn parse_allof_type(name: &str, schema: &Yaml, output_file: &mut File) {
         .get(&Yaml::String("description".to_string()))
         .map(|x| x.as_str().unwrap().trim_end().replace("```", "***"))
     {
-        writeln!(output_file, "/** {} */", doc).unwrap();
+        writeln!(output_file, "/** {doc} */",).unwrap();
     }
 
     writeln!(
@@ -739,7 +732,7 @@ fn parse_allof_type(name: &str, schema: &Yaml, output_file: &mut File) {
         "#[derive(Debug, PartialEq, Serialize, Deserialize)]"
     )
     .unwrap();
-    writeln!(output_file, "pub struct {} {{", name).unwrap();
+    writeln!(output_file, "pub struct {name} {{",).unwrap();
 
     for all_of_item in all_of_list {
         let all_of_item_hash = all_of_item.as_hash().unwrap();
@@ -747,7 +740,7 @@ fn parse_allof_type(name: &str, schema: &Yaml, output_file: &mut File) {
             let item_name = get_object_name_from_reference(item_ref.as_str().unwrap());
             let field_name = camel_to_snake(item_name);
             writeln!(output_file, "\t#[serde(flatten)]").unwrap();
-            writeln!(output_file, "\tpub {}: {},", field_name, item_name).unwrap();
+            writeln!(output_file, "\tpub {field_name}: {item_name},",).unwrap();
         } else if let Some(Yaml::String(variant_type)) =
             all_of_item_hash.get(&Yaml::String("type".to_string()))
         {
@@ -814,8 +807,7 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
     let schema_list = path_schema.as_hash().unwrap();
 
     // Before implementing the functions the additional types need to be defined
-    for (path_name, path_hash) in schema_list {
-        println!("{:?}", path_name);
+    for (_, path_hash) in schema_list {
         let path_operations = path_hash.as_hash().unwrap();
         for (_, path_operation_hash) in path_operations {
             let operation_name =
@@ -1016,7 +1008,6 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
     writeln!(client_output_file, "impl OpenAIClient {{").unwrap();
 
     for (path_name, path_hash) in schema_list {
-        println!("{:?}", path_name);
         let path_operations = path_hash.as_hash().unwrap();
         for (path_operation_name, path_operation_hash) in path_operations {
             let operation_name =
@@ -1094,14 +1085,13 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
                     };
 
                     if !parameter_required {
-                        parameter_type = format!("Option<{}>", parameter_type);
+                        parameter_type = format!("Option<{parameter_type}>",);
                     }
 
                     write!(
                         client_output_file,
-                        "{}: {}, ",
+                        "{}: {parameter_type}, ",
                         parameter["name"].as_str().unwrap().replace("[]", ""),
-                        parameter_type
                     )
                     .unwrap();
                 }
@@ -1137,9 +1127,9 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
                     request_body_hash["required"].as_bool().unwrap_or(false);
                 write!(client_output_file, "request_body: ").unwrap();
                 if request_body_is_required {
-                    write!(client_output_file, "{}, ", request_body_type).unwrap();
+                    write!(client_output_file, "{request_body_type}, ",).unwrap();
                 } else {
-                    write!(client_output_file, "Option<{}>, ", request_body_type).unwrap();
+                    write!(client_output_file, "Option<{request_body_type}>, ",).unwrap();
                 }
             }
 
@@ -1396,7 +1386,7 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
             }
 
             writeln!(client_output_file, "\t}}\n",).unwrap();
-            println!("\t{:?}", path_operation_name);
+            println!("\t{path_operation_name:?}",);
         }
     }
 

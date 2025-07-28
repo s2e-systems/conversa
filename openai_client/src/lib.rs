@@ -53,17 +53,17 @@ impl From<std::io::Error> for ConversaError {
 impl std::fmt::Display for ConversaError {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            ConversaError::ClientError(msg) => write!(f, "Client error: {}", msg),
-            ConversaError::InvalidData(msg) => write!(f, "Invalid data: {}", msg),
+            ConversaError::ClientError(msg) => write!(f, "Client error: {msg}",),
+            ConversaError::InvalidData(msg) => write!(f, "Invalid data: {msg}",),
             ConversaError::UnexpectedStatusCode { code, response } => {
-                write!(f, "Unexpected status code {}: {}", code, response)
+                write!(f, "Unexpected status code {code}: {response}",)
             }
-            ConversaError::IoError(msg) => write!(f, "std::io error: {}", msg),
+            ConversaError::IoError(msg) => write!(f, "std::io error: {msg}",),
             ConversaError::UnexpectedContentType(content_type) => {
-                write!(f, "Unexpected content type: {}", content_type)
+                write!(f, "Unexpected content type: {content_type}",)
             }
-            ConversaError::ErrorResponse(err) => write!(f, "Error response: {:?}", err),
-            ConversaError::Error(err) => write!(f, "Error: {:?}", err),
+            ConversaError::ErrorResponse(err) => write!(f, "Error response: {err:?}",),
+            ConversaError::Error(err) => write!(f, "Error: {err:?}",),
         }
     }
 }
