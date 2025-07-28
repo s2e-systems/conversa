@@ -2,12 +2,15 @@ use std::{fs::File, io::Write};
 
 use conversa_openai_client::{
     OpenAIClient, OpenAIClientBuilder,
-    client::CreateResponseResponse,
+    client::{CreateChatCompletionResponse, CreateResponseResponse},
     types::{
-        CreateImageRequest, CreateImageRequestModel, CreateImageRequestOutputFormat,
-        CreateImageRequestSize, CreateModelResponseProperties, CreateModelResponsePropertiesObject,
-        CreateResponse, CreateResponseObject, CreateResponseObjectInput, ModelIdsResponses,
-        ModelIdsShared, ModelResponseProperties, OutputContent, OutputItem, ResponseProperties,
+        ChatCompletionRequestMessage, ChatCompletionRequestUserMessage,
+        ChatCompletionRequestUserMessageContent, CreateChatCompletionRequest,
+        CreateChatCompletionRequestObject, CreateImageRequest, CreateImageRequestModel,
+        CreateImageRequestOutputFormat, CreateImageRequestSize, CreateModelResponseProperties,
+        CreateModelResponsePropertiesObject, CreateResponse, CreateResponseObject,
+        CreateResponseObjectInput, ModelIdsResponses, ModelIdsShared, ModelResponseProperties,
+        OutputContent, OutputItem, ResponseProperties,
     },
 };
 
@@ -116,4 +119,71 @@ async fn create_image() {
     let response = client.create_image(request_body).await.unwrap();
     let mut file = File::create("image_response_output.txt").unwrap();
     write!(file, "{:?}", response).unwrap();
+}
+
+#[tokio::test]
+#[ignore]
+async fn create_chat_completion() {
+    let client = create_openai_client();
+    let request_body = CreateChatCompletionRequest {
+        create_model_response_properties: CreateModelResponseProperties {
+            model_response_properties: ModelResponseProperties {
+                metadata: None,
+                top_logprobs: None,
+                temperature: None,
+                top_p: None,
+                user: None,
+                service_tier: None,
+            },
+            object: CreateModelResponsePropertiesObject { top_logprobs: None },
+        },
+        object: CreateChatCompletionRequestObject {
+            messages: vec![
+                ChatCompletionRequestMessage::ChatCompletionRequestUserMessage(
+                    ChatCompletionRequestUserMessage {
+                        content: ChatCompletionRequestUserMessageContent::String(String::from("What is the capital of France?")),
+                        role: conversa_openai_client::types::ChatCompletionRequestUserMessageRole::User,
+                        name: None
+                    },
+                ),
+            ],
+            model: ModelIdsShared::String("gpt-4.1".to_string()),
+            modalities: None,
+            reasoning_effort: None,
+            max_completion_tokens: None,
+            frequency_penalty: None,
+            presence_penalty: None,
+            web_search_options: None,
+            top_logprobs: None,
+            response_format: None,
+            audio: None,
+            store: None,
+            stream: None,
+            stop: None,
+            logit_bias: None,
+            logprobs: None,
+            max_tokens: None,
+            n: None,
+            prediction: None,
+            seed: None,
+            stream_options: None,
+            tools: None,
+            tool_choice: None,
+            parallel_tool_calls: None,
+            function_call: None,
+            functions: None,
+        },
+    };
+
+    let response = client.create_chat_completion(request_body).await.unwrap();
+    if let CreateChatCompletionResponse::ApplicationJson(json_response) = response {
+        assert_eq!(json_response.choices.len(), 1);
+        let output_choice = &json_response.choices[0];
+        assert_eq!(
+            output_choice.message.content,
+            Some(String::from("The capital of France is **Paris**."))
+        );
+    } else {
+        panic!("Invalid response: {:?}", response)
+    }
 }
