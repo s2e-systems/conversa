@@ -84,16 +84,13 @@ async fn create_response() {
             if let OutputContent::OutputTextContent(output_text_content) = output_message_content {
                 assert_eq!(output_text_content.text, "The capital of France is Paris.");
             } else {
-                panic!(
-                    "Invalid output message content: {:?}",
-                    output_message_content
-                )
+                panic!("Invalid output message content: {output_message_content:?}",)
             }
         } else {
-            panic!("Invalid output object: {:?}", output_object)
+            panic!("Invalid output object: {output_object:?}",)
         }
     } else {
-        panic!("Invalid response: {:?}", response)
+        panic!("Invalid response: {response:?}",)
     }
 }
 
@@ -184,6 +181,6 @@ async fn create_chat_completion() {
             Some(String::from("The capital of France is **Paris**."))
         );
     } else {
-        panic!("Invalid response: {:?}", response)
+        panic!("Invalid response: {response:?}",)
     }
 }
