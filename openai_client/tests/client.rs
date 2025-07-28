@@ -115,7 +115,7 @@ async fn create_image() {
 
     let response = client.create_image(request_body).await.unwrap();
     let mut file = File::create("image_response_output.txt").unwrap();
-    write!(file, "{:?}", response).unwrap();
+    write!(file, "{response:?}",).unwrap();
 }
 
 #[tokio::test]
