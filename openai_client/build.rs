@@ -426,7 +426,9 @@ fn parse_object_type(name: &str, schema: &Yaml, output_file: &mut File) {
         if let Some(type_label) = schema_map.get(&Yaml::String("x-oaiTypeLabel".to_string())) {
             let type_label_str = type_label.as_str().unwrap();
             match type_label_str {
-                "map" => writeln!(output_file, "pub struct {}(pub serde_json::Value);\n", name).unwrap(),
+                "map" => {
+                    writeln!(output_file, "pub struct {}(pub serde_json::Value);\n", name).unwrap()
+                }
                 _ => unimplemented!("{} with type label {:?}", name, type_label),
             }
         } else {
@@ -520,6 +522,7 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
     writeln!(output_file, "#[serde(untagged)]").unwrap();
     writeln!(output_file, "pub enum {} {{", name).unwrap();
 
+    let mut string_enum_already_processed = false;
     for (index, one_of_variant) in one_of_list.iter().enumerate() {
         let one_of_variant_hash = one_of_variant.as_hash().unwrap();
         if let Some(doc) = one_of_variant_hash
@@ -544,28 +547,9 @@ fn parse_oneof_type(name: &str, schema: &Yaml, output_file: &mut File) {
         {
             match variant_type.as_str() {
                 "string" => {
-                    // Some variants have two String types to account for enumerations but for
-                    // our type this is not necessary because all String representations are
-                    // equal
-                    if let Some(Yaml::Array(enum_list)) =
-                        one_of_variant_hash.get(&Yaml::String("enum".to_string()))
-                    {
-                        for string_variant in enum_list {
-                            writeln!(
-                                output_file,
-                                "\t#[serde(rename=\"{}\")]",
-                                string_variant.as_str().unwrap()
-                            )
-                            .unwrap();
-                            writeln!(
-                                output_file,
-                                "\t{},",
-                                str_to_camel_case(string_variant.as_str().unwrap())
-                            )
-                            .unwrap();
-                        }
-                    } else {
+                    if !string_enum_already_processed {
                         writeln!(output_file, "\tString(String),").unwrap();
+                        string_enum_already_processed = true;
                     }
                 }
                 "integer" => {
@@ -1299,7 +1283,7 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
                     if request_body_is_required {
                         writeln!(
                             client_output_file,
-                            "\t\trequest = request.body(serde_json::to_string(&request_body)?);",
+                            "\t\trequest = request.json(&request_body);",
                         )
                         .unwrap();
                     } else {

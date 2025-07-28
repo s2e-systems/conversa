@@ -168,7 +168,7 @@ impl OpenAIClient {
 		let address = format!("{}/assistants", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -211,7 +211,7 @@ impl OpenAIClient {
 		let address = format!("{}/assistants/{assistant_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -254,7 +254,7 @@ impl OpenAIClient {
 		let address = format!("{}/audio/speech", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -328,7 +328,7 @@ impl OpenAIClient {
 		let address = format!("{}/batches", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -470,7 +470,7 @@ unsupported parameters in reasoning models,
 		let address = format!("{}/chat/completions", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -520,7 +520,7 @@ the only supported modification is to update the `metadata` field. */
 		let address = format!("{}/chat/completions/{completion_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -596,7 +596,7 @@ returned. */
 		let address = format!("{}/completions", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -831,7 +831,7 @@ You can send either a multipart/form-data request with the raw file content, or 
 		let address = format!("{}/embeddings", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -888,7 +888,7 @@ For more information, see the [Evals guide](/docs/guides/evals). */
 		let address = format!("{}/evals", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -931,7 +931,7 @@ For more information, see the [Evals guide](/docs/guides/evals). */
 		let address = format!("{}/evals/{eval_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1007,7 +1007,7 @@ For more information, see the [Evals guide](/docs/guides/evals). */
 		let address = format!("{}/evals/{eval_id}/runs", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1272,7 +1272,7 @@ Please [contact us](https://help.openai.com/) if you need to increase these stor
 		let address = format!("{}/fine_tuning/alpha/graders/run", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1294,7 +1294,7 @@ Please [contact us](https://help.openai.com/) if you need to increase these stor
 		let address = format!("{}/fine_tuning/alpha/graders/validate", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1353,7 +1353,7 @@ This enables organization owners to share fine-tuned models with other projects 
 		let address = format!("{}/fine_tuning/checkpoints/{fine_tuned_model_checkpoint}/permissions", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1402,7 +1402,7 @@ Response includes details of the enqueued job including job status and the name 
 		let address = format!("{}/fine_tuning/jobs", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1616,7 +1616,7 @@ Response includes details of the enqueued job including job status and the name 
 		let address = format!("{}/images/generations", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1724,7 +1724,7 @@ more in the [moderation guide](/docs/guides/moderation). */
 		let address = format!("{}/moderations", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1776,7 +1776,7 @@ more in the [moderation guide](/docs/guides/moderation). */
 		let address = format!("{}/organization/admin_api_keys", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1920,7 +1920,7 @@ Organizations can upload up to 50 certificates. */
 		let address = format!("{}/organization/certificates", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1944,7 +1944,7 @@ You can atomically and idempotently activate up to 10 certificates at a time. */
 		let address = format!("{}/organization/certificates/activate", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -1968,7 +1968,7 @@ You can atomically and idempotently deactivate up to 10 certificates at a time. 
 		let address = format!("{}/organization/certificates/deactivate", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2016,7 +2016,7 @@ You can get a certificate regardless of whether it is active or not. */
 		let address = format!("{}/organization/certificates/{certificate_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2128,7 +2128,7 @@ The certificate must be inactive for the organization and all projects. */
 		let address = format!("{}/organization/invites", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2222,7 +2222,7 @@ The certificate must be inactive for the organization and all projects. */
 		let address = format!("{}/organization/projects", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2265,7 +2265,7 @@ The certificate must be inactive for the organization and all projects. */
 		let address = format!("{}/organization/projects/{project_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2409,7 +2409,7 @@ You can atomically and idempotently activate up to 10 certificates at a time. */
 		let address = format!("{}/organization/projects/{project_id}/certificates/activate", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2432,7 +2432,7 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/projects/{project_id}/certificates/deactivate", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2484,7 +2484,7 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/projects/{project_id}/rate_limits/{rate_limit_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2533,7 +2533,7 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/projects/{project_id}/service_accounts", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2624,7 +2624,7 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/projects/{project_id}/users", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -2667,7 +2667,7 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/projects/{project_id}/users/{user_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3144,7 +3144,7 @@ idempotently deactivate up to 10 certificates at a time. */
 		let address = format!("{}/organization/users/{user_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3193,7 +3193,7 @@ for the Realtime API. */
 		let address = format!("{}/realtime/sessions", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3221,7 +3221,7 @@ for the Realtime API. */
 		let address = format!("{}/realtime/transcription_sessions", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3249,7 +3249,7 @@ as input for the model's response. */
 		let address = format!("{}/responses", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3409,7 +3409,7 @@ the `background` parameter set to `true` can be cancelled.
 		let address = format!("{}/threads/runs", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3452,7 +3452,7 @@ the `background` parameter set to `true` can be cancelled.
 		let address = format!("{}/threads/{thread_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3531,7 +3531,7 @@ the `background` parameter set to `true` can be cancelled.
 		let address = format!("{}/threads/{thread_id}/messages", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3574,7 +3574,7 @@ the `background` parameter set to `true` can be cancelled.
 		let address = format!("{}/threads/{thread_id}/messages/{message_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3653,7 +3653,7 @@ the `background` parameter set to `true` can be cancelled.
 		if let Some(q) = include {
 			request = request.query(&[("include", q)]);
 		}
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3696,7 +3696,7 @@ the `background` parameter set to `true` can be cancelled.
 		let address = format!("{}/threads/{thread_id}/runs/{run_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3799,7 +3799,7 @@ the `background` parameter set to `true` can be cancelled.
 		let address = format!("{}/threads/{thread_id}/runs/{run_id}/submit_tool_outputs", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3837,7 +3837,7 @@ File](/docs/api-reference/files/create). */
 		let address = format!("{}/uploads", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3886,7 +3886,7 @@ The number of bytes uploaded upon completion must match the number of bytes init
 		let address = format!("{}/uploads/{upload_id}/complete", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -3967,7 +3967,7 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let address = format!("{}/vector_stores", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -4010,7 +4010,7 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let address = format!("{}/vector_stores/{vector_store_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -4053,7 +4053,7 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let address = format!("{}/vector_stores/{vector_store_id}/file_batches", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -4189,7 +4189,7 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let address = format!("{}/vector_stores/{vector_store_id}/files", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -4253,7 +4253,7 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let address = format!("{}/vector_stores/{vector_store_id}/files/{file_id}", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();
@@ -4296,7 +4296,7 @@ It is possible to add multiple Parts in parallel. You can decide the intended or
 		let address = format!("{}/vector_stores/{vector_store_id}/search", self.base_address);
 		let mut request = self.client.post(&address);
 		request = request.bearer_auth(&self.api_key);
-		request = request.body(serde_json::to_string(&request_body)?);
+		request = request.json(&request_body);
 		let result = request.send().await?;
 		let status_code = result.status().as_u16();
 		let _content_type = result.headers()[reqwest::header::CONTENT_TYPE].to_str()?.to_string();

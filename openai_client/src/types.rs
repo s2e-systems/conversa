@@ -252,8 +252,7 @@ Setting to `{ "type": "json_object" }` enables JSON mode, which ensures the mess
 #[serde(untagged)]
 pub enum AssistantsApiResponseFormatOption {
 	/** `auto` is the default value */
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	ResponseFormatText(ResponseFormatText),
 	ResponseFormatJsonObject(ResponseFormatJsonObject),
 	ResponseFormatJsonSchema(ResponseFormatJsonSchema),
@@ -268,12 +267,7 @@ Specifying a particular tool like `{"type": "file_search"}` or `{"type": "functi
 #[serde(untagged)]
 pub enum AssistantsApiToolChoiceOption {
 	/** `none` means the model will not call any tools and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools before responding to the user. */
-	#[serde(rename="none")]
-	None,
-	#[serde(rename="auto")]
-	Auto,
-	#[serde(rename="required")]
-	Required,
+	String(String),
 	AssistantsNamedToolChoice(AssistantsNamedToolChoice),
 }
 
@@ -1919,12 +1913,7 @@ Specifying a particular tool via `{"type": "function", "function": {"name": "my_
 #[serde(untagged)]
 pub enum ChatCompletionToolChoiceOption {
 	/** `none` means the model will not call any tool and instead generates a message. `auto` means the model can pick between generating a message or calling one or more tools. `required` means the model must call one or more tools. */
-	#[serde(rename="none")]
-	None,
-	#[serde(rename="auto")]
-	Auto,
-	#[serde(rename="required")]
-	Required,
+	String(String),
 	ChatCompletionNamedToolChoice(ChatCompletionNamedToolChoice),
 }
 
@@ -2745,10 +2734,7 @@ if functions are present. */
 #[serde(untagged)]
 pub enum CreateChatCompletionRequestObjectFunctionCall {
 	/** `none` means the model will not call a function and instead generates a message. `auto` means the model can pick between generating a message or calling a function. */
-	#[serde(rename="none")]
-	None,
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	ChatCompletionFunctionCallOption(ChatCompletionFunctionCallOption),
 }
 
@@ -3056,12 +3042,6 @@ the request. */
 #[serde(untagged)]
 pub enum CreateCompletionRequestModel {
 	String(String),
-	#[serde(rename="gpt-3.5-turbo-instruct")]
-	Gpt35TurboInstruct,
-	#[serde(rename="davinci-002")]
-	Davinci002,
-	#[serde(rename="babbage-002")]
-	Babbage002,
 }
 
 /** The prompt(s) to generate completions for, encoded as a string, array of strings, array of tokens, or array of token arrays.
@@ -3287,12 +3267,6 @@ pub enum CreateEmbeddingRequestInput {
 #[serde(untagged)]
 pub enum CreateEmbeddingRequestModel {
 	String(String),
-	#[serde(rename="text-embedding-ada-002")]
-	TextEmbeddingAda002,
-	#[serde(rename="text-embedding-3-small")]
-	TextEmbedding3Small,
-	#[serde(rename="text-embedding-3-large")]
-	TextEmbedding3Large,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -3764,14 +3738,6 @@ pub struct CreateFineTuningCheckpointPermissionRequest {
 #[serde(untagged)]
 pub enum CreateFineTuningJobRequestModel {
 	String(String),
-	#[serde(rename="babbage-002")]
-	Babbage002,
-	#[serde(rename="davinci-002")]
-	Davinci002,
-	#[serde(rename="gpt-3.5-turbo")]
-	Gpt35Turbo,
-	#[serde(rename="gpt-4o-mini")]
-	Gpt4oMini,
 }
 
 /** Number of examples in each batch. A larger batch size means that model parameters
@@ -3779,8 +3745,7 @@ are updated less frequently, but with lower variance. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateFineTuningJobRequestHyperparametersBatchSize {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -3789,8 +3754,7 @@ overfitting. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateFineTuningJobRequestHyperparametersLearningRateMultiplier {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Number(f32),
 }
 
@@ -3799,8 +3763,7 @@ through the training dataset. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateFineTuningJobRequestHyperparametersNEpochs {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -3826,8 +3789,7 @@ through the training dataset. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum CreateFineTuningJobRequestIntegrationsType {
-	#[serde(rename="wandb")]
-	Wandb,
+	String(String),
 }
 
 /** The settings for your integration with Weights and Biases. This payload specifies the project that
@@ -3939,10 +3901,6 @@ pub enum CreateImageEditRequestBackground {
 #[serde(untagged)]
 pub enum CreateImageEditRequestModel {
 	String(String),
-	#[serde(rename="dall-e-2")]
-	DallE2,
-	#[serde(rename="gpt-image-1")]
-	GptImage1,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -4052,12 +4010,6 @@ formats, and defaults to 100. */
 #[serde(untagged)]
 pub enum CreateImageRequestModel {
 	String(String),
-	#[serde(rename="dall-e-2")]
-	DallE2,
-	#[serde(rename="dall-e-3")]
-	DallE3,
-	#[serde(rename="gpt-image-1")]
-	GptImage1,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -4195,8 +4147,6 @@ should be set to either `png` (default value) or `webp`. */
 #[serde(untagged)]
 pub enum CreateImageVariationRequestModel {
 	String(String),
-	#[serde(rename="dall-e-2")]
-	DallE2,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -4354,14 +4304,6 @@ available models [here](/docs/models#moderation). */
 #[serde(untagged)]
 pub enum CreateModerationRequestModel {
 	String(String),
-	#[serde(rename="omni-moderation-latest")]
-	OmniModerationLatest,
-	#[serde(rename="omni-moderation-2024-09-26")]
-	OmniModeration20240926,
-	#[serde(rename="text-moderation-latest")]
-	TextModerationLatest,
-	#[serde(rename="text-moderation-stable")]
-	TextModerationStable,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -4680,12 +4622,6 @@ We generally recommend altering this or temperature but not both. */
 #[serde(untagged)]
 pub enum CreateSpeechRequestModel {
 	String(String),
-	#[serde(rename="tts-1")]
-	Tts1,
-	#[serde(rename="tts-1-hd")]
-	Tts1Hd,
-	#[serde(rename="gpt-4o-mini-tts")]
-	Gpt4oMiniTts,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -4746,70 +4682,6 @@ pub enum CreateSpeechResponseStreamEvent {
 #[serde(untagged)]
 pub enum CreateThreadAndRunRequestModel {
 	String(String),
-	#[serde(rename="gpt-4.1")]
-	Gpt41,
-	#[serde(rename="gpt-4.1-mini")]
-	Gpt41Mini,
-	#[serde(rename="gpt-4.1-nano")]
-	Gpt41Nano,
-	#[serde(rename="gpt-4.1-2025-04-14")]
-	Gpt4120250414,
-	#[serde(rename="gpt-4.1-mini-2025-04-14")]
-	Gpt41Mini20250414,
-	#[serde(rename="gpt-4.1-nano-2025-04-14")]
-	Gpt41Nano20250414,
-	#[serde(rename="gpt-4o")]
-	Gpt4o,
-	#[serde(rename="gpt-4o-2024-11-20")]
-	Gpt4o20241120,
-	#[serde(rename="gpt-4o-2024-08-06")]
-	Gpt4o20240806,
-	#[serde(rename="gpt-4o-2024-05-13")]
-	Gpt4o20240513,
-	#[serde(rename="gpt-4o-mini")]
-	Gpt4oMini,
-	#[serde(rename="gpt-4o-mini-2024-07-18")]
-	Gpt4oMini20240718,
-	#[serde(rename="gpt-4.5-preview")]
-	Gpt45Preview,
-	#[serde(rename="gpt-4.5-preview-2025-02-27")]
-	Gpt45Preview20250227,
-	#[serde(rename="gpt-4-turbo")]
-	Gpt4Turbo,
-	#[serde(rename="gpt-4-turbo-2024-04-09")]
-	Gpt4Turbo20240409,
-	#[serde(rename="gpt-4-0125-preview")]
-	Gpt40125Preview,
-	#[serde(rename="gpt-4-turbo-preview")]
-	Gpt4TurboPreview,
-	#[serde(rename="gpt-4-1106-preview")]
-	Gpt41106Preview,
-	#[serde(rename="gpt-4-vision-preview")]
-	Gpt4VisionPreview,
-	#[serde(rename="gpt-4")]
-	Gpt4,
-	#[serde(rename="gpt-4-0314")]
-	Gpt40314,
-	#[serde(rename="gpt-4-0613")]
-	Gpt40613,
-	#[serde(rename="gpt-4-32k")]
-	Gpt432k,
-	#[serde(rename="gpt-4-32k-0314")]
-	Gpt432k0314,
-	#[serde(rename="gpt-4-32k-0613")]
-	Gpt432k0613,
-	#[serde(rename="gpt-3.5-turbo")]
-	Gpt35Turbo,
-	#[serde(rename="gpt-3.5-turbo-16k")]
-	Gpt35Turbo16k,
-	#[serde(rename="gpt-3.5-turbo-0613")]
-	Gpt35Turbo0613,
-	#[serde(rename="gpt-3.5-turbo-1106")]
-	Gpt35Turbo1106,
-	#[serde(rename="gpt-3.5-turbo-0125")]
-	Gpt35Turbo0125,
-	#[serde(rename="gpt-3.5-turbo-16k-0613")]
-	Gpt35Turbo16k0613,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -4963,12 +4835,6 @@ pub struct CreateThreadRequest {
 #[serde(untagged)]
 pub enum CreateTranscriptionRequestModel {
 	String(String),
-	#[serde(rename="whisper-1")]
-	Whisper1,
-	#[serde(rename="gpt-4o-transcribe")]
-	Gpt4oTranscribe,
-	#[serde(rename="gpt-4o-mini-transcribe")]
-	Gpt4oMiniTranscribe,
 }
 
 /** Controls how the audio is cut into chunks. When set to `"auto"`, the server first normalizes loudness and then uses voice activity detection (VAD) to choose boundaries. `server_vad` object can be provided to tweak VAD detection parameters manually. If unset, the audio is transcribed as a single block. */
@@ -4976,8 +4842,7 @@ pub enum CreateTranscriptionRequestModel {
 #[serde(untagged)]
 pub enum CreateTranscriptionRequestChunkingStrategy {
 	/** Automatically set chunking parameters based on the audio. Must be set to `"auto"`. */
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	VadConfig(VadConfig),
 }
 
@@ -5084,8 +4949,6 @@ pub struct CreateTranscriptionResponseVerboseJson {
 #[serde(untagged)]
 pub enum CreateTranslationRequestModel {
 	String(String),
-	#[serde(rename="whisper-1")]
-	Whisper1,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -6203,8 +6066,7 @@ pub struct FineTuneChatRequestInput {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneDPOHyperparametersBeta {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Number(f32),
 }
 
@@ -6212,8 +6074,7 @@ pub enum FineTuneDPOHyperparametersBeta {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneDPOHyperparametersBatchSize {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -6221,8 +6082,7 @@ pub enum FineTuneDPOHyperparametersBatchSize {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneDPOHyperparametersLearningRateMultiplier {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Number(f32),
 }
 
@@ -6230,8 +6090,7 @@ pub enum FineTuneDPOHyperparametersLearningRateMultiplier {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneDPOHyperparametersNEpochs {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -6335,8 +6194,7 @@ pub struct FineTunePreferenceRequestInput {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneReinforcementHyperparametersBatchSize {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -6344,8 +6202,7 @@ pub enum FineTuneReinforcementHyperparametersBatchSize {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneReinforcementHyperparametersLearningRateMultiplier {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Number(f32),
 }
 
@@ -6353,8 +6210,7 @@ pub enum FineTuneReinforcementHyperparametersLearningRateMultiplier {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneReinforcementHyperparametersNEpochs {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -6374,8 +6230,7 @@ pub enum FineTuneReinforcementHyperparametersReasoningEffort {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneReinforcementHyperparametersComputeMultiplier {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Number(f32),
 }
 
@@ -6383,8 +6238,7 @@ pub enum FineTuneReinforcementHyperparametersComputeMultiplier {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneReinforcementHyperparametersEvalInterval {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -6392,8 +6246,7 @@ pub enum FineTuneReinforcementHyperparametersEvalInterval {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneReinforcementHyperparametersEvalSamples {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -6461,8 +6314,7 @@ pub struct FineTuneReinforcementRequestInput {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneSupervisedHyperparametersBatchSize {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -6470,8 +6322,7 @@ pub enum FineTuneSupervisedHyperparametersBatchSize {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneSupervisedHyperparametersLearningRateMultiplier {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Number(f32),
 }
 
@@ -6479,8 +6330,7 @@ pub enum FineTuneSupervisedHyperparametersLearningRateMultiplier {
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuneSupervisedHyperparametersNEpochs {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -6578,8 +6428,7 @@ are updated less frequently, but with lower variance. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuningJobHyperparametersBatchSize {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -6588,8 +6437,7 @@ overfitting. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuningJobHyperparametersLearningRateMultiplier {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Number(f32),
 }
 
@@ -6598,8 +6446,7 @@ through the training dataset. */
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum FineTuningJobHyperparametersNEpochs {
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	Integer(u64),
 }
 
@@ -8137,10 +7984,7 @@ pub enum MCPToolRequireApproval {
 	/** Specify a single approval policy for all tools. One of `always` or 
 `never`. When set to `always`, all tools will require approval. When 
 set to `never`, all tools will not require approval. */
-	#[serde(rename="always")]
-	Always,
-	#[serde(rename="never")]
-	Never,
+	String(String),
 }
 
 /** Give the model access to additional tools via remote Model Context Protocol 
@@ -8789,142 +8633,13 @@ pub enum ModelIds {
 #[serde(untagged)]
 pub enum ModelIdsResponses {
 	ModelIdsShared(ModelIdsShared),
-	#[serde(rename="o1-pro")]
-	O1Pro,
-	#[serde(rename="o1-pro-2025-03-19")]
-	O1Pro20250319,
-	#[serde(rename="o3-pro")]
-	O3Pro,
-	#[serde(rename="o3-pro-2025-06-10")]
-	O3Pro20250610,
-	#[serde(rename="o3-deep-research")]
-	O3DeepResearch,
-	#[serde(rename="o3-deep-research-2025-06-26")]
-	O3DeepResearch20250626,
-	#[serde(rename="o4-mini-deep-research")]
-	O4MiniDeepResearch,
-	#[serde(rename="o4-mini-deep-research-2025-06-26")]
-	O4MiniDeepResearch20250626,
-	#[serde(rename="computer-use-preview")]
-	ComputerUsePreview,
-	#[serde(rename="computer-use-preview-2025-03-11")]
-	ComputerUsePreview20250311,
+	String(String),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
 #[serde(untagged)]
 pub enum ModelIdsShared {
 	String(String),
-	#[serde(rename="gpt-4.1")]
-	Gpt41,
-	#[serde(rename="gpt-4.1-mini")]
-	Gpt41Mini,
-	#[serde(rename="gpt-4.1-nano")]
-	Gpt41Nano,
-	#[serde(rename="gpt-4.1-2025-04-14")]
-	Gpt4120250414,
-	#[serde(rename="gpt-4.1-mini-2025-04-14")]
-	Gpt41Mini20250414,
-	#[serde(rename="gpt-4.1-nano-2025-04-14")]
-	Gpt41Nano20250414,
-	#[serde(rename="o4-mini")]
-	O4Mini,
-	#[serde(rename="o4-mini-2025-04-16")]
-	O4Mini20250416,
-	#[serde(rename="o3")]
-	O3,
-	#[serde(rename="o3-2025-04-16")]
-	O320250416,
-	#[serde(rename="o3-mini")]
-	O3Mini,
-	#[serde(rename="o3-mini-2025-01-31")]
-	O3Mini20250131,
-	#[serde(rename="o1")]
-	O1,
-	#[serde(rename="o1-2024-12-17")]
-	O120241217,
-	#[serde(rename="o1-preview")]
-	O1Preview,
-	#[serde(rename="o1-preview-2024-09-12")]
-	O1Preview20240912,
-	#[serde(rename="o1-mini")]
-	O1Mini,
-	#[serde(rename="o1-mini-2024-09-12")]
-	O1Mini20240912,
-	#[serde(rename="gpt-4o")]
-	Gpt4o,
-	#[serde(rename="gpt-4o-2024-11-20")]
-	Gpt4o20241120,
-	#[serde(rename="gpt-4o-2024-08-06")]
-	Gpt4o20240806,
-	#[serde(rename="gpt-4o-2024-05-13")]
-	Gpt4o20240513,
-	#[serde(rename="gpt-4o-audio-preview")]
-	Gpt4oAudioPreview,
-	#[serde(rename="gpt-4o-audio-preview-2024-10-01")]
-	Gpt4oAudioPreview20241001,
-	#[serde(rename="gpt-4o-audio-preview-2024-12-17")]
-	Gpt4oAudioPreview20241217,
-	#[serde(rename="gpt-4o-audio-preview-2025-06-03")]
-	Gpt4oAudioPreview20250603,
-	#[serde(rename="gpt-4o-mini-audio-preview")]
-	Gpt4oMiniAudioPreview,
-	#[serde(rename="gpt-4o-mini-audio-preview-2024-12-17")]
-	Gpt4oMiniAudioPreview20241217,
-	#[serde(rename="gpt-4o-search-preview")]
-	Gpt4oSearchPreview,
-	#[serde(rename="gpt-4o-mini-search-preview")]
-	Gpt4oMiniSearchPreview,
-	#[serde(rename="gpt-4o-search-preview-2025-03-11")]
-	Gpt4oSearchPreview20250311,
-	#[serde(rename="gpt-4o-mini-search-preview-2025-03-11")]
-	Gpt4oMiniSearchPreview20250311,
-	#[serde(rename="chatgpt-4o-latest")]
-	Chatgpt4oLatest,
-	#[serde(rename="codex-mini-latest")]
-	CodexMiniLatest,
-	#[serde(rename="gpt-4o-mini")]
-	Gpt4oMini,
-	#[serde(rename="gpt-4o-mini-2024-07-18")]
-	Gpt4oMini20240718,
-	#[serde(rename="gpt-4-turbo")]
-	Gpt4Turbo,
-	#[serde(rename="gpt-4-turbo-2024-04-09")]
-	Gpt4Turbo20240409,
-	#[serde(rename="gpt-4-0125-preview")]
-	Gpt40125Preview,
-	#[serde(rename="gpt-4-turbo-preview")]
-	Gpt4TurboPreview,
-	#[serde(rename="gpt-4-1106-preview")]
-	Gpt41106Preview,
-	#[serde(rename="gpt-4-vision-preview")]
-	Gpt4VisionPreview,
-	#[serde(rename="gpt-4")]
-	Gpt4,
-	#[serde(rename="gpt-4-0314")]
-	Gpt40314,
-	#[serde(rename="gpt-4-0613")]
-	Gpt40613,
-	#[serde(rename="gpt-4-32k")]
-	Gpt432k,
-	#[serde(rename="gpt-4-32k-0314")]
-	Gpt432k0314,
-	#[serde(rename="gpt-4-32k-0613")]
-	Gpt432k0613,
-	#[serde(rename="gpt-3.5-turbo")]
-	Gpt35Turbo,
-	#[serde(rename="gpt-3.5-turbo-16k")]
-	Gpt35Turbo16k,
-	#[serde(rename="gpt-3.5-turbo-0301")]
-	Gpt35Turbo0301,
-	#[serde(rename="gpt-3.5-turbo-0613")]
-	Gpt35Turbo0613,
-	#[serde(rename="gpt-3.5-turbo-1106")]
-	Gpt35Turbo1106,
-	#[serde(rename="gpt-3.5-turbo-0125")]
-	Gpt35Turbo0125,
-	#[serde(rename="gpt-3.5-turbo-16k-0613")]
-	Gpt35Turbo16k0613,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -10391,8 +10106,7 @@ inclusive of tool calls, that was used in this response. */
 #[serde(untagged)]
 pub enum RealtimeResponseMaxOutputTokens {
 	Integer(u64),
-	#[serde(rename="inf")]
-	Inf,
+	String(String),
 }
 
 /** The response resource. */
@@ -10500,8 +10214,7 @@ given model. Defaults to `inf`. */
 #[serde(untagged)]
 pub enum RealtimeResponseCreateParamsMaxResponseOutputTokens {
 	Integer(u64),
-	#[serde(rename="inf")]
-	Inf,
+	String(String),
 }
 
 /** Controls which conversation the response is added to. Currently supports
@@ -10513,10 +10226,6 @@ will not add items to default conversation. */
 #[serde(untagged)]
 pub enum RealtimeResponseCreateParamsConversation {
 	String(String),
-	#[serde(rename="auto")]
-	Auto,
-	#[serde(rename="none")]
-	None,
 }
 
 /** Create a new Realtime response with these parameters */
@@ -11687,8 +11396,7 @@ workflow name, group id, and metadata. */
 #[serde(untagged)]
 pub enum RealtimeSessionTracing {
 	/** Default tracing mode for the session. */
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	/** Granular configuration for tracing. */
 	TracingConfiguration {
 		workflow_name: String,
@@ -11734,8 +11442,7 @@ given model. Defaults to `inf`. */
 #[serde(untagged)]
 pub enum RealtimeSessionMaxResponseOutputTokens {
 	Integer(u64),
-	#[serde(rename="inf")]
-	Inf,
+	String(String),
 }
 
 /** Realtime session object configuration. */
@@ -11967,8 +11674,7 @@ workflow name, group id, and metadata. */
 #[serde(untagged)]
 pub enum RealtimeSessionCreateRequestTracing {
 	/** Default tracing mode for the session. */
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	/** Granular configuration for tracing. */
 	TracingConfiguration {
 		workflow_name: String,
@@ -12014,8 +11720,7 @@ given model. Defaults to `inf`. */
 #[serde(untagged)]
 pub enum RealtimeSessionCreateRequestMaxResponseOutputTokens {
 	Integer(u64),
-	#[serde(rename="inf")]
-	Inf,
+	String(String),
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -12156,8 +11861,7 @@ workflow name, group id, and metadata. */
 #[serde(untagged)]
 pub enum RealtimeSessionCreateResponseTracing {
 	/** Default tracing mode for the session. */
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	/** Granular configuration for tracing. */
 	TracingConfiguration {
 		workflow_name: String,
@@ -12228,8 +11932,7 @@ given model. Defaults to `inf`. */
 #[serde(untagged)]
 pub enum RealtimeSessionCreateResponseMaxResponseOutputTokens {
 	Integer(u64),
-	#[serde(rename="inf")]
-	Inf,
+	String(String),
 }
 
 /** A new Realtime session configuration, with an ephermeral key. Default TTL
@@ -15633,8 +15336,7 @@ parameters manually. If unset, the audio is transcribed as a single block. */
 #[serde(untagged)]
 pub enum TranscriptionChunkingStrategy {
 	/** Automatically set chunking parameters based on the audio. Must be set to `"auto"`. */
-	#[serde(rename="auto")]
-	Auto,
+	String(String),
 	VadConfig(VadConfig),
 }
 
@@ -16521,28 +16223,6 @@ pub struct VectorStoreSearchResultsPage {
 #[serde(untagged)]
 pub enum VoiceIdsShared {
 	String(String),
-	#[serde(rename="alloy")]
-	Alloy,
-	#[serde(rename="ash")]
-	Ash,
-	#[serde(rename="ballad")]
-	Ballad,
-	#[serde(rename="coral")]
-	Coral,
-	#[serde(rename="echo")]
-	Echo,
-	#[serde(rename="fable")]
-	Fable,
-	#[serde(rename="onyx")]
-	Onyx,
-	#[serde(rename="nova")]
-	Nova,
-	#[serde(rename="sage")]
-	Sage,
-	#[serde(rename="shimmer")]
-	Shimmer,
-	#[serde(rename="verse")]
-	Verse,
 }
 
 #[derive(Debug, PartialEq, Serialize, Deserialize)]
@@ -17677,12 +17357,7 @@ pub enum ComputerCallOutputItemParamAcknowledgedSafetyChecks {
 #[serde(untagged)]
 pub enum ComputerCallOutputItemParamStatus {
 	/** The status of the message input. One of `in_progress`, `completed`, or `incomplete`. Populated when input items are returned via API. */
-	#[serde(rename="in_progress")]
-	InProgress,
-	#[serde(rename="completed")]
-	Completed,
-	#[serde(rename="incomplete")]
-	Incomplete,
+	String(String),
 	None,
 }
 
@@ -17721,12 +17396,7 @@ pub enum FunctionCallOutputItemParamType {
 #[serde(untagged)]
 pub enum FunctionCallOutputItemParamStatus {
 	/** The status of the item. One of `in_progress`, `completed`, or `incomplete`. Populated when items are returned via API. */
-	#[serde(rename="in_progress")]
-	InProgress,
-	#[serde(rename="completed")]
-	Completed,
-	#[serde(rename="incomplete")]
-	Incomplete,
+	String(String),
 	None,
 }
 
@@ -17750,8 +17420,7 @@ pub struct FunctionCallOutputItemParam {
 #[serde(untagged)]
 pub enum ItemReferenceParamType {
 	/** The type of item to reference. Always `item_reference`. */
-	#[serde(rename="item_reference")]
-	ItemReference,
+	String(String),
 	None,
 }
 
