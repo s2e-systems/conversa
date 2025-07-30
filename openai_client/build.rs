@@ -1394,6 +1394,10 @@ fn parse_endpoint_path(path_schema: &Yaml, client_output_file: &mut File) {
 }
 
 fn main() {
+    if std::env::var("DOCS_RS").is_ok() {
+        return;
+    }
+
     println!("cargo::rerun-if-changed=./openapi.documented.yml");
     println!("cargo::rerun-if-changed=src/lib.rs");
 
